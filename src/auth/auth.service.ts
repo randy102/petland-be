@@ -53,6 +53,7 @@ export class AuthService {
     await this.userService.checkDuplication({ email });
     const createdUser = await this.userService.save({
       ...body,
+      password: this.hashService.create(body.password),
       isActive: true,
       role: UserRole.USER,
     });

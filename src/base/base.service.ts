@@ -21,7 +21,6 @@ export default class BaseService<E extends BaseEntity<E>> {
   }
 
   save(plain: Partial<E>): Promise<E> {
-    console.log(plain, new this.Entity(plain));
     return getMongoRepository<E>(this.Entity).save(new this.Entity(plain));
   }
 

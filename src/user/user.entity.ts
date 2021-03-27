@@ -1,6 +1,7 @@
 import { BaseEntity } from '../base/base.entity';
 import { Column, Entity } from 'typeorm';
 import { Expose } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 
 export enum UserRole {
   ADMIN = 'ADMIN',
@@ -10,30 +11,35 @@ export enum UserRole {
 
 @Entity({ name: 'User' })
 export default class UserEntity extends BaseEntity<UserEntity> {
+  @ApiProperty()
   @Column()
   @Expose()
   isActive: boolean;
 
+  @ApiProperty()
   @Column()
   @Expose()
   email: string;
 
+  @ApiProperty()
   @Column()
   @Expose()
   password: string;
 
+  @ApiProperty()
   @Column()
   @Expose()
   name: string;
 
   @Column()
   @Expose()
-  city: string;
+  cityID: string;
 
   @Column()
   @Expose()
-  district: string;
+  districtID: string;
 
+  @ApiProperty()
   @Column()
   @Expose()
   role: UserRole;

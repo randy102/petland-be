@@ -9,11 +9,14 @@ import { UtilsModule } from './utils/utils.module';
 import { PhotoModule } from './photo/photo.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
     ConfigModule.forRoot({ isGlobal: true }),
+    ServeStaticModule.forRoot({ rootPath: join(__dirname, '..', 'public')}),
     UtilsModule,
     PhotoModule,
     CategoryModule,

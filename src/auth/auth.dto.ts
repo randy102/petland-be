@@ -27,10 +27,10 @@ export class RegisterDTO  extends LoginDTO{
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  city: string;
+  cityID: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  district: string;
+  districtID: string;
 }

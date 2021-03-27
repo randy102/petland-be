@@ -9,13 +9,14 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { PhotoService } from './photo.service';
 import { File } from './photo.type';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 const DEFAULT_PHOTOS = ['default-avatar', 'default-brand'];
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
+@ApiTags('Photo')
 @Controller('api/photo')
 export class PhotoController {
   constructor(private readonly photoService: PhotoService) {}
