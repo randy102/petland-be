@@ -9,7 +9,7 @@ export class PhotoService {
   private readonly SECRET = process.env.S3_SECRET;
   private readonly BUCKET_NAME = process.env.S3_BUCKET;
   private readonly S3: AWS.S3;
-
+  private readonly DEFAULT_PHOTOS = ['default-avatar', 'default-brand'];
   constructor(private readonly hashService: HashService) {
     this.S3 = new AWS.S3({
       accessKeyId: this.ID,
@@ -39,7 +39,9 @@ export class PhotoService {
       Key: id,
     };
     return new Promise((resolve) => {
-      this.S3.deleteObject(params, (err, data) => {
+      if (this.DEFAULT_PHOTOS.some((p) => p === id)) resolve(false);
+
+      this.S3.deleteObject(params, (err) => {
         if (err) throw Error('Delete Object fail: ' + err.message);
         console.log(`File deleted successfully. ${id}`);
         resolve(true);

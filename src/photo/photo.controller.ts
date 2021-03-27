@@ -4,32 +4,36 @@ import {
   UseInterceptors,
   UploadedFile,
   Delete,
-  Body, UseGuards
+  Body,
+  UseGuards,
+  Param,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { PhotoService } from './photo.service';
 import { File } from './photo.type';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { PhotoUploadDto } from './photo.dto';
 
-const DEFAULT_PHOTOS = ['default-avatar', 'default-brand'];
 
+
+@Controller('api/photo')
+@ApiTags('Photo')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@ApiTags('Photo')
-@Controller('api/photo')
 export class PhotoController {
   constructor(private readonly photoService: PhotoService) {}
 
   @Post()
   @UseInterceptors(FileInterceptor('file'))
-  uploadPhoto(@UploadedFile() file: File) {
+  @ApiBody({ type: PhotoUploadDto })
+  uploadPhoto(@UploadedFile() file: File): Promise<string> {
     return this.photoService.save(file);
   }
 
-  @Delete()
-  deletePhoto(@Body() body) {
-    if (DEFAULT_PHOTOS.some((p) => p === body.id)) return true;
-    return this.photoService.remove(body.id);
+  @Delete(':id')
+  @ApiBody({type: Boolean})
+  deletePhoto(@Param('id') id: string): Promise<boolean> {
+    return this.photoService.remove(id);
   }
 }
