@@ -32,10 +32,12 @@ export class UpdateProfileDTO {
 }
 
 export class ChangePasswordDTO {
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   oldPassword: string;
 
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   newPassword: string;
