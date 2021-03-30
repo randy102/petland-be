@@ -11,6 +11,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { CityModule } from './city/city.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { join } from 'path';
     CategoryModule,
     UserModule,
     AuthModule,
+    CityModule,
   ],
   controllers: [AppController],
   providers: [AppService],
