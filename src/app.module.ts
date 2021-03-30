@@ -12,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { CityModule } from './city/city.module';
+import { DistrictModule } from './district/district.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { CityModule } from './city/city.module';
     UserModule,
     AuthModule,
     CityModule,
+    DistrictModule,
   ],
   controllers: [AppController],
   providers: [AppService],
