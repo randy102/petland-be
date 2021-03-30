@@ -12,7 +12,6 @@ export class CityController {
 
     @Get()
     @ApiResponse({type: CityEntity, status: HttpStatus.OK})
-    @Roles(UserRole.USER)
     getCity(): Promise<CityEntity[]>{
         return this.cityService.getCity();
     }
