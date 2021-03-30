@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsMobilePhone, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsMobilePhone, IsNotEmpty, IsString } from '../commons/custom-validator';
 
 export class LoginDTO {
   @ApiProperty()
