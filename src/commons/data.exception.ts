@@ -14,6 +14,6 @@ export class DuplicateError extends HttpException {
 
 export class FieldError extends HttpException {
   constructor(sub: string, msg?: string) {
-    super(`${sub} không đúng. ${msg || ''}`, HttpStatus.BAD_REQUEST);
+    super(`${sub} không hợp lệ. ${msg || ''}`, HttpStatus.BAD_REQUEST);
   }
 }

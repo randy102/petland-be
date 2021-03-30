@@ -1,6 +1,18 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserRole } from './user.entity';
 
+export class ChangeUserRoleDTO {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  role: UserRole;
+}
 
 export class UpdateProfileDTO {
   @IsString()
