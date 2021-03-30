@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from '../commons/custom-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserRole } from './user.entity';
 

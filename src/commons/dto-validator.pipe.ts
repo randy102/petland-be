@@ -1,7 +1,12 @@
-
-import { PipeTransform, Injectable, ArgumentMetadata, BadRequestException } from '@nestjs/common';
+import {
+  PipeTransform,
+  Injectable,
+  ArgumentMetadata,
+  BadRequestException,
+} from '@nestjs/common';
 import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
+import { SchemaError } from './data.exception';
 
 @Injectable()
 export class DtoValidationPipe implements PipeTransform<any> {
@@ -12,7 +17,8 @@ export class DtoValidationPipe implements PipeTransform<any> {
     const object = plainToClass(metatype, value);
     const errors = await validate(object);
     if (errors.length > 0) {
-      throw new BadRequestException('Schema not correct!');
+      console.log(errors);
+      throw new SchemaError(errors);
     }
     return value;
   }
