@@ -2,10 +2,12 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { HashService } from '../utils/hash/hash.service';
 import BaseService from '../base/base.service';
 import UserEntity, { UserRole } from './user.entity';
-import { ChangePasswordDTO, ChangeUserRoleDTO } from './user.dto';
-import { FieldError } from '../commons/data.exception';
+import { ChangePasswordDTO, ChangeUserRoleDTO, LockUserDTO } from './user.dto';
+import { DuplicateError, FieldError, NotFoundError } from '../commons/data.exception';
 import { query } from 'express';
 import { throwError } from 'rxjs';
+import { Roles } from 'src/auth/roles.guard';
+import { User } from './user.decorator';
 
 @Injectable()
 export class UserService extends BaseService<UserEntity> {
@@ -15,6 +17,10 @@ export class UserService extends BaseService<UserEntity> {
 
   async getDetail(id: string): Promise<UserEntity>{
     return this.findOne({_id: id});
+  }
+
+  async getUserList(): Promise<UserEntity[]>{
+    return this.find();
   }
 
   async changeRole(data: ChangeUserRoleDTO, updatedBy: string): Promise<UserEntity> {
@@ -36,21 +42,21 @@ export class UserService extends BaseService<UserEntity> {
   async changePassWord(data: ChangePasswordDTO, updatedBy: string): Promise<UserEntity> {
     const user = await this.checkExisted({ _id: updatedBy });
     const checkDuplication = data.newPassword === data.oldPassword;
-    if(user == null){
-      throw new HttpException(
-        'Không tìm thấy tài khoản',
-        HttpStatus.NOT_FOUND
-      )
-    }
     if(checkDuplication){
-      throw new HttpException(
-        'Mật khẩu mới không được trùng mật khẩu cũ',
-        256
-      );
+      throw new DuplicateError('Mật khẩu');
     }
     return this.save({
       ...user,
       password: this.hashService.create(data.newPassword),
+      updatedBy
+    })
+  }
+
+  async lockUser(data: LockUserDTO, updatedBy: string): Promise<UserEntity>{
+    const user = await this.checkExisted({_id: data.id});
+    return this.save({
+      ...user,
+      isActive: data.isActive,
       updatedBy
     })
   }

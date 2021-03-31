@@ -1,13 +1,14 @@
 import { IsNotEmpty, IsString } from '../commons/custom-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserRole } from './user.entity';
+import { IsBoolean } from 'class-validator';
 
 export class ChangeUserRoleDTO {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   id: string;
-
+  
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
@@ -41,4 +42,16 @@ export class ChangePasswordDTO {
   @IsString()
   @IsNotEmpty()
   newPassword: string;
+}
+
+
+export class LockUserDTO{
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  isActive: boolean;
 }
