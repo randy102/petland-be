@@ -24,6 +24,16 @@ export default class UserEntity extends BaseEntity<UserEntity> {
   @ApiProperty()
   @Column()
   @Expose()
+  phone: string;
+
+  @ApiProperty()
+  @Column()
+  @Expose()
+  avatar: string;
+
+  @ApiProperty()
+  @Column()
+  @Expose()
   password: string;
 
   @ApiProperty()

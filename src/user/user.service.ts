@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { HashService } from '../utils/hash/hash.service';
 import BaseService from '../base/base.service';
 import UserEntity, { UserRole } from './user.entity';
-import { ChangePasswordDTO, ChangeUserRoleDTO, LockUserDTO } from './user.dto';
+import { ChangePasswordDTO, ChangeUserRoleDTO, LockUserDTO, UpdateProfileDTO } from './user.dto';
 import { DuplicateError, FieldError, NotFoundError } from '../commons/data.exception';
 import { query } from 'express';
 import { throwError } from 'rxjs';
@@ -48,6 +48,19 @@ export class UserService extends BaseService<UserEntity> {
     return this.save({
       ...user,
       password: this.hashService.create(data.newPassword),
+      updatedBy
+    })
+  }
+
+  async changeInfo(data: UpdateProfileDTO, updatedBy: string): Promise<UserEntity>{
+    const user = await this.checkExisted({_id: updatedBy});
+    return this.save({
+      ...user,
+      phone: data.phone,
+      name: data.name,
+      cityID: data.city,
+      districtID: data.district,
+      avatar: data.avatar,
       updatedBy
     })
   }

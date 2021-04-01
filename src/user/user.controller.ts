@@ -5,7 +5,7 @@ import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import UserEntity, { UserRole } from './user.entity';
 import { Roles, RolesGuard } from '../auth/roles.guard';
 import { User } from './user.decorator';
-import { ChangePasswordDTO, ChangeUserRoleDTO, LockUserDTO } from './user.dto';
+import { ChangePasswordDTO, ChangeUserRoleDTO, LockUserDTO, UpdateProfileDTO } from './user.dto';
 
 @Controller('api/user')
 @ApiTags('User')
@@ -38,6 +38,12 @@ export class UserController {
   @ApiResponse({type: UserEntity, status: HttpStatus.OK})
   changePassWord(@Body() body: ChangePasswordDTO, @User() user: UserEntity): Promise<UserEntity>{
     return this.userService.changePassWord(body,user._id);
+  }
+
+  @Put('changeInfo')
+  @ApiResponse({type: UserEntity, status: HttpStatus.OK})
+  changeInfo(@Body() body: UpdateProfileDTO, @User() user: UserEntity): Promise<UserEntity>{
+    return this.userService.changeInfo(body, user._id);
   }
 
   @Put('lockUser')

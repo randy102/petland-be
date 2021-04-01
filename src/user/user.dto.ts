@@ -16,19 +16,29 @@ export class ChangeUserRoleDTO {
 }
 
 export class UpdateProfileDTO {
+  @ApiProperty()
   @IsString()
+  @IsNotEmpty()
   name: string;
 
+  @ApiProperty()
   @IsString()
+  @IsNotEmpty()
   phone: string;
 
+  @ApiProperty()
   @IsString()
+  @IsNotEmpty()
   city: string;
 
+  @ApiProperty()
   @IsString()
+  @IsNotEmpty()
   district: string;
 
+  @ApiProperty()
   @IsString()
+  @IsNotEmpty()
   avatar: string;
 }
 
