@@ -1,7 +1,6 @@
 import { IsNotEmpty, IsString } from '../commons/custom-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserRole } from './user.entity';
-import { IsBoolean } from 'class-validator';
+import UserEntity, { UserRole } from './user.entity';
 
 export class ChangeUserRoleDTO {
   @ApiProperty()
@@ -64,4 +63,12 @@ export class LockUserDTO{
   @ApiProperty()
   @IsNotEmpty()
   isActive: boolean;
+}
+
+export class UserResponseDTO extends UserEntity{
+  @ApiProperty()
+  district: string
+
+  @ApiProperty()
+  city: string
 }

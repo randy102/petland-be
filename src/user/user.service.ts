@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { HashService } from '../utils/hash/hash.service';
 import BaseService from '../base/base.service';
 import UserEntity, { UserRole } from './user.entity';
-import { ChangePasswordDTO, ChangeUserRoleDTO, LockUserDTO, UpdateProfileDTO } from './user.dto';
+import { ChangePasswordDTO, ChangeUserRoleDTO, LockUserDTO, UpdateProfileDTO, UserResponseDTO } from './user.dto';
 import { DuplicateError, FieldError, NotFoundError } from '../commons/data.exception';
 import { query } from 'express';
 import { throwError } from 'rxjs';
@@ -15,12 +15,54 @@ export class UserService extends BaseService<UserEntity> {
     super(UserEntity, 'Người dùng');
   }
 
-  async getDetail(id: string): Promise<UserEntity>{
-    return this.findOne({_id: id});
+  async getDetail(id: string): Promise<UserResponseDTO> {
+    await this.checkExisted({ _id: id });
+    return await this.aggregate([
+      { $match: { _id: id } },
+      {
+        $lookup: {
+          'from': 'District',
+          'localField': 'districtID',
+          'foreignField': '_id',
+          'as': 'district'
+        }
+      },
+      { $unwind: { path: '$district', preserveNullAndEmptyArrays: true } },
+      {
+        $lookup: {
+          'from': 'City',
+          'localField': 'cityID',
+          'foreignField': '_id',
+          'as': 'city'
+        }
+      },
+      { $unwind: { path: '$city', preserveNullAndEmptyArrays: true } }
+    ])[0];
   }
 
-  async getUserList(): Promise<UserEntity[]>{
-    return this.find();
+  async getUserList(): Promise<UserResponseDTO[]> {
+    return await this.aggregate([
+      {
+        $lookup: {
+          'from': 'District',
+          'localField': 'districtID',
+          'foreignField': '_id',
+          'as': 'district'
+        }
+      },
+      { $unwind: { path: '$district', preserveNullAndEmptyArrays: true } },
+      { $set: { district: '$district.name' } },
+      {
+        $lookup: {
+          'from': 'City',
+          'localField': 'cityID',
+          'foreignField': '_id',
+          'as': 'city'
+        }
+      },
+      { $unwind: { path: '$city', preserveNullAndEmptyArrays: true } },
+      { $set: { city: '$city.name' } }
+    ]);
   }
 
   async changeRole(data: ChangeUserRoleDTO, updatedBy: string): Promise<UserEntity> {
@@ -42,18 +84,18 @@ export class UserService extends BaseService<UserEntity> {
   async changePassWord(data: ChangePasswordDTO, updatedBy: string): Promise<UserEntity> {
     const user = await this.checkExisted({ _id: updatedBy });
     const checkDuplication = data.newPassword === data.oldPassword;
-    if(checkDuplication){
+    if (checkDuplication) {
       throw new DuplicateError('Mật khẩu');
     }
     return this.save({
       ...user,
       password: this.hashService.create(data.newPassword),
       updatedBy
-    })
+    });
   }
 
-  async changeInfo(data: UpdateProfileDTO, updatedBy: string): Promise<UserEntity>{
-    const user = await this.checkExisted({_id: updatedBy});
+  async changeInfo(data: UpdateProfileDTO, updatedBy: string): Promise<UserEntity> {
+    const user = await this.checkExisted({ _id: updatedBy });
     return this.save({
       ...user,
       phone: data.phone,
@@ -62,16 +104,16 @@ export class UserService extends BaseService<UserEntity> {
       districtID: data.district,
       avatar: data.avatar,
       updatedBy
-    })
+    });
   }
 
-  async lockUser(data: LockUserDTO, updatedBy: string): Promise<UserEntity>{
-    const user = await this.checkExisted({_id: data.id});
+  async lockUser(data: LockUserDTO, updatedBy: string): Promise<UserEntity> {
+    const user = await this.checkExisted({ _id: data.id });
     return this.save({
       ...user,
       isActive: data.isActive,
       updatedBy
-    })
+    });
   }
 
   private async ensureHasAdmin() {

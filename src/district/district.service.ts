@@ -9,6 +9,9 @@ export class DistrictService extends BaseService<DistrictEntity> {
     }
 
     async getDistrict(id: string): Promise<DistrictEntity[]>{
-        return this.find({cityID: id});
+        if(id){
+            return this.find({cityID: id});
+        }
+        return this.find();
     }
 }

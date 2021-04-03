@@ -5,7 +5,7 @@ import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import UserEntity, { UserRole } from './user.entity';
 import { Roles, RolesGuard } from '../auth/roles.guard';
 import { User } from './user.decorator';
-import { ChangePasswordDTO, ChangeUserRoleDTO, LockUserDTO, UpdateProfileDTO } from './user.dto';
+import { ChangePasswordDTO, ChangeUserRoleDTO, LockUserDTO, UpdateProfileDTO, UserResponseDTO } from './user.dto';
 
 @Controller('api/user')
 @ApiTags('User')
@@ -20,17 +20,18 @@ export class UserController {
     return user;
   }
 
-  @Get('userList')
+  @Get('list')
   @Roles(UserRole.ADMIN)
-  @ApiResponse({type: UserEntity, status: HttpStatus.OK})
-  getUserList(): Promise<UserEntity[]>{
+  @ApiResponse({type: UserResponseDTO, status: HttpStatus.OK})
+  async getUserList(): Promise<UserResponseDTO[]>{
+    console.log(await this.userService.getUserList());
     return this.userService.getUserList();
   }
 
   @Get('detail/:id')
   @Roles(UserRole.ADMIN)
-  @ApiResponse({type: UserEntity, status: HttpStatus.OK})
-  getDetail(@Param('id') id: string): Promise<UserEntity>{
+  @ApiResponse({type: UserResponseDTO, status: HttpStatus.OK})
+  getDetail(@Param('id') id: string): Promise<UserResponseDTO>{
     return this.userService.getDetail(id);
   }
 

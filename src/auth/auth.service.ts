@@ -10,6 +10,7 @@ import { classToPlain, plainToClass } from 'class-transformer';
 export class AccountPayload {
   _id: string;
   email: string;
+  role: UserRole;
 }
 
 @Injectable()
