@@ -6,7 +6,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  app.enableCors();
   app.useGlobalPipes(new DtoValidationPipe())
   const config = new DocumentBuilder()
     .addBearerAuth()
@@ -15,6 +14,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document, {customCssUrl: '/css/theme-newspaper.css'});
+  app.enableCors();
   await app.listen(process.env.PORT || 8080);
 }
 bootstrap();
