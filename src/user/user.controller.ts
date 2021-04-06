@@ -23,9 +23,9 @@ export class UserController {
   @Get('list')
   @Roles(UserRole.ADMIN)
   @ApiResponse({type: UserResponseDTO, status: HttpStatus.OK})
-  async getUserList(): Promise<UserResponseDTO[]>{
-    console.log(await this.userService.getUserList());
-    return this.userService.getUserList();
+  async getUsers(): Promise<UserResponseDTO[]>{
+    console.log(await this.userService.getUsers());
+    return this.userService.getUsers();
   }
 
   @Get('detail/:id')

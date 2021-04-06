@@ -40,7 +40,7 @@ export class UserService extends BaseService<UserEntity> {
     ])[0];
   }
 
-  async getUserList(): Promise<UserResponseDTO[]> {
+  async getUsers(): Promise<UserResponseDTO[]> {
     return await this.aggregate([
       {
         $lookup: {
