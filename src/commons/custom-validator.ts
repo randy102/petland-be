@@ -3,7 +3,9 @@ import {
   IsNotEmpty as _IsNotEmpty,
   IsString as _IsString,
   IsMobilePhone as _IsMobilePhone,
-  IsEmail as _IsEmail
+  IsEmail as _IsEmail,
+  IsBoolean as _IsBoolean,
+  IsNumber as _IsNumber, IsNumberOptions
 } from 'class-validator';
 
 export const IsNotEmpty = (
@@ -28,3 +30,14 @@ export const IsString = (
   validationOptions?: ValidationOptions,
 ): PropertyDecorator =>
   _IsString({ ...validationOptions, message: 'Phải là chuỗi' });
+
+export const IsBoolean = (
+  validationOptions?: ValidationOptions,
+): PropertyDecorator =>
+  _IsBoolean({ ...validationOptions, message: 'Phải là Boolean' });
+
+export const IsNumber = (
+  options?: IsNumberOptions,
+  validationOptions?: ValidationOptions,
+): PropertyDecorator =>
+  _IsNumber(options, { ...validationOptions, message: 'Phải là Boolean' });

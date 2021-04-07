@@ -13,6 +13,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { CityModule } from './city/city.module';
 import { DistrictModule } from './district/district.module';
+import { PostModule } from './post/post.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { DistrictModule } from './district/district.module';
     AuthModule,
     CityModule,
     DistrictModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService],

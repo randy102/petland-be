@@ -26,7 +26,7 @@ export default class BaseService<E extends BaseEntity<E>> {
 
   async delete(ids: string[]): Promise<boolean> {
     const deleted = await getMongoRepository(this.Entity).deleteMany({
-      _id: { $in: ids },
+      _id: { $in: ids }
     });
     return !!deleted.result.ok;
   }
@@ -42,11 +42,19 @@ export default class BaseService<E extends BaseEntity<E>> {
     return existed;
   }
 
+  async checkExistedId(id: string): Promise<E> {
+    // @ts-ignore
+    const existed = await this.findOne({ _id: id });
+    if (!existed) throw new NotFoundError(this.Name);
+    return existed;
+  }
+
 
   async checkExistedIds(ids: string[]): Promise<E[]> {
     let rows: E[] = [];
     for (let id of ids) {
-      const existed = await this.findOne(id);
+      // @ts-ignore
+      const existed = await this.findOne({ _id: id });
       if (!existed) throw new NotFoundError(this.Name);
       rows.push(existed);
     }
