@@ -150,4 +150,11 @@ export class PostService extends BaseService<PostEntity> {
       updatedBy,
     });
   }
+  async getDetail(id: string): Promise<PostResponseDTO> {
+    await this.checkExistedId(id)
+    return (await this.aggregate([
+      match({_id: id}),
+      ...PostService.baseAggregate()
+    ]))[0]
+  }
 }

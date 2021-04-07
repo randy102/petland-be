@@ -18,16 +18,25 @@ export class PostController {
 
   @Get('user')
   @ApiResponse({
-    type: PostResponseDTO,
+    type: [PostResponseDTO],
     description: 'User can see its posts'
   })
   getUserPost(@User() user: UserEntity): Promise<PostResponseDTO[]> {
     return this.postService.getByUser(user._id);
   }
 
-  @Get()
+  @Get(':id')
   @ApiResponse({
     type: PostResponseDTO,
+    description: 'Post detail'
+  })
+  getDetail(@Param('id') id: string): Promise<PostResponseDTO>{
+    return this.postService.getDetail(id)
+  }
+
+  @Get()
+  @ApiResponse({
+    type: [PostResponseDTO],
     description: 'Admin can see all posts'
   })
   @Roles(UserRole.ADMIN)
