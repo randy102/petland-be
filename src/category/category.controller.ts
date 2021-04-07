@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Roles, RolesGuard } from 'src/auth/roles.guard';
 import { User } from 'src/user/user.decorator';
-import { UserRole } from 'src/user/user.entity';
+import UserEntity, { UserRole } from 'src/user/user.entity';
 import { CategoryDto, UpdateCategoryDto } from './category.dto';
 import CategoryEntity from './category.entity';
 import { CategoryService } from './category.service';
@@ -18,8 +18,8 @@ export class CategoryController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN)
     @ApiResponse({type: CategoryEntity, status: HttpStatus.OK})
-    createCategory(@Body() body: CategoryDto): Promise<CategoryEntity>{
-        return this.categoryService.createCategory(body);
+    createCategory(@Body() body: CategoryDto,@User() user: UserEntity): Promise<CategoryEntity>{
+        return this.categoryService.createCategory(body, user._id);
     }
 
     @Get('list')
@@ -32,8 +32,8 @@ export class CategoryController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN)
     @ApiResponse({type: CategoryEntity, status: HttpStatus.OK})
-    updateCategory(@Body() body: UpdateCategoryDto): Promise<CategoryEntity>{
-        return this.categoryService.updateCategory(body);
+    updateCategory(@Body() body: UpdateCategoryDto, @User() user: UserEntity): Promise<CategoryEntity>{
+        return this.categoryService.updateCategory(body, user._id);
     }
 
     @Delete('delete/:id')

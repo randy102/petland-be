@@ -15,6 +15,5 @@ export class DistrictController{
     getDistrict(@Query('city') cityID: string): Promise<DistrictEntity[]>{
         return this.districtService.getDistrict(cityID);
     }
-
     
 }
