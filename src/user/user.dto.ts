@@ -28,16 +28,6 @@ export class UpdateProfileDTO {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  city: string;
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  district: string;
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
   avatar: string;
 }
 
@@ -66,9 +56,5 @@ export class LockUserDTO{
 }
 
 export class UserResponseDTO extends UserEntity{
-  @ApiProperty()
-  district: string
 
-  @ApiProperty()
-  city: string
 }

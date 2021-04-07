@@ -16,9 +16,18 @@ export class PostService extends BaseService<PostEntity>{
       join('Category','categoryID','_id','category'),
       unwind('$category'),
       set({category: '$category.name'}),
+
       join('User','createdBy','_id','createdName'),
       unwind('$createdName'),
-      set({createdName: '$createdName.name'})
+      set({createdName: '$createdName.name'}),
+
+      join('District','districtID','_id','district'),
+      unwind('$district'),
+      set({district: '$district.name'}),
+
+      join('City','cityID','_id','city'),
+      unwind('$city'),
+      set({city: '$city.name'})
     ])
   }
 

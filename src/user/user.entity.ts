@@ -41,14 +41,6 @@ export default class UserEntity extends BaseEntity<UserEntity> {
   @Expose()
   name: string;
 
-  @Column()
-  @Expose()
-  cityID: string;
-
-  @Column()
-  @Expose()
-  districtID: string;
-
   @ApiProperty()
   @Column()
   @Expose()

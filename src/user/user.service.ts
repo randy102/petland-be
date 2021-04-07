@@ -4,7 +4,6 @@ import BaseService from '../base/base.service';
 import UserEntity, { UserRole } from './user.entity';
 import { ChangePasswordDTO, ChangeUserRoleDTO, LockUserDTO, UpdateProfileDTO, UserResponseDTO } from './user.dto';
 import { DuplicateError, FieldError } from '../commons/data.exception';
-import { join, match, set, unwind } from '../utils/mongo/aggregate-tools';
 
 @Injectable()
 export class UserService extends BaseService<UserEntity> {
@@ -13,24 +12,11 @@ export class UserService extends BaseService<UserEntity> {
   }
 
   async getDetail(id: string): Promise<UserResponseDTO> {
-    await this.checkExisted({ _id: id });
-    return (await this.aggregate([
-      match({_id: id}),
-      join('District','districtID','_id','district'),
-      unwind('$district'),
-      join('City','cityID','_id','city'),
-      unwind('$$city')
-    ]))[0];
+    return this.checkExisted({ _id: id });
   }
 
   async getUsers(): Promise<UserResponseDTO[]> {
-    return await this.aggregate([
-      join('District','districtID','_id','district'),
-      unwind('$district'),
-      join('City','cityID','_id','city'),
-      unwind('$$city'),
-      set({city: '$city.name'})
-    ]);
+    return this.find();
   }
 
   async changeRole(data: ChangeUserRoleDTO, updatedBy: string): Promise<UserEntity> {
@@ -66,11 +52,7 @@ export class UserService extends BaseService<UserEntity> {
     const user = await this.checkExisted({ _id: updatedBy });
     return this.save({
       ...user,
-      phone: data.phone,
-      name: data.name,
-      cityID: data.city,
-      districtID: data.district,
-      avatar: data.avatar,
+      ...data,
       updatedBy
     });
   }

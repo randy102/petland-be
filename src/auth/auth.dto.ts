@@ -23,14 +23,4 @@ export class RegisterDTO  extends LoginDTO{
   @IsString()
   @IsNotEmpty()
   name: string;
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  cityID: string;
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  districtID: string;
 }

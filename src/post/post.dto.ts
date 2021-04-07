@@ -20,6 +20,16 @@ export class CreatePostDTO{
     subCategoryID: string;
 
     @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    cityID: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    districtID: string;
+
+    @ApiProperty()
     detail: string;
 
     @ApiProperty()
@@ -64,6 +74,12 @@ export class PostResponseDTO extends PostEntity {
 
     @ApiProperty()
     subCategory: string;
+
+    @ApiProperty()
+    city: string;
+
+    @ApiProperty()
+    district: string;
 
     @ApiProperty()
     createdName: string;

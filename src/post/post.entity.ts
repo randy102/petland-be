@@ -36,6 +36,16 @@ export default class PostEntity extends BaseEntity<PostEntity>{
     @ApiProperty()
     @Column()
     @Expose()
+    cityID: string;
+
+    @ApiProperty()
+    @Column()
+    @Expose()
+    districtID: string;
+
+    @ApiProperty()
+    @Column()
+    @Expose()
     detail: string;
 
     @ApiProperty()
