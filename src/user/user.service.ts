@@ -3,11 +3,7 @@ import { HashService } from '../utils/hash/hash.service';
 import BaseService from '../base/base.service';
 import UserEntity, { UserRole } from './user.entity';
 import { ChangePasswordDTO, ChangeUserRoleDTO, LockUserDTO, UpdateProfileDTO, UserResponseDTO } from './user.dto';
-import { DuplicateError, FieldError, NotFoundError } from '../commons/data.exception';
-import { query } from 'express';
-import { throwError } from 'rxjs';
-import { Roles } from 'src/auth/roles.guard';
-import { User } from './user.decorator';
+import { DuplicateError, FieldError } from '../commons/data.exception';
 
 @Injectable()
 export class UserService extends BaseService<UserEntity> {
@@ -16,53 +12,11 @@ export class UserService extends BaseService<UserEntity> {
   }
 
   async getDetail(id: string): Promise<UserResponseDTO> {
-    await this.checkExisted({ _id: id });
-    return await this.aggregate([
-      { $match: { _id: id } },
-      {
-        $lookup: {
-          'from': 'District',
-          'localField': 'districtID',
-          'foreignField': '_id',
-          'as': 'district'
-        }
-      },
-      { $unwind: { path: '$district', preserveNullAndEmptyArrays: true } },
-      {
-        $lookup: {
-          'from': 'City',
-          'localField': 'cityID',
-          'foreignField': '_id',
-          'as': 'city'
-        }
-      },
-      { $unwind: { path: '$city', preserveNullAndEmptyArrays: true } }
-    ])[0];
+    return this.checkExisted({ _id: id });
   }
 
   async getUsers(): Promise<UserResponseDTO[]> {
-    return await this.aggregate([
-      {
-        $lookup: {
-          'from': 'District',
-          'localField': 'districtID',
-          'foreignField': '_id',
-          'as': 'district'
-        }
-      },
-      { $unwind: { path: '$district', preserveNullAndEmptyArrays: true } },
-      { $set: { district: '$district.name' } },
-      {
-        $lookup: {
-          'from': 'City',
-          'localField': 'cityID',
-          'foreignField': '_id',
-          'as': 'city'
-        }
-      },
-      { $unwind: { path: '$city', preserveNullAndEmptyArrays: true } },
-      { $set: { city: '$city.name' } }
-    ]);
+    return this.find();
   }
 
   async changeRole(data: ChangeUserRoleDTO, updatedBy: string): Promise<UserEntity> {
@@ -98,11 +52,7 @@ export class UserService extends BaseService<UserEntity> {
     const user = await this.checkExisted({ _id: updatedBy });
     return this.save({
       ...user,
-      phone: data.phone,
-      name: data.name,
-      cityID: data.city,
-      districtID: data.district,
-      avatar: data.avatar,
+      ...data,
       updatedBy
     });
   }

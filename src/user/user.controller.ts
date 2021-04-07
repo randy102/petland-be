@@ -22,7 +22,7 @@ export class UserController {
 
   @Get('list')
   @Roles(UserRole.ADMIN)
-  @ApiResponse({type: UserResponseDTO, status: HttpStatus.OK})
+  @ApiResponse({type: [UserResponseDTO], status: HttpStatus.OK})
   async getUsers(): Promise<UserResponseDTO[]>{
     console.log(await this.userService.getUsers());
     return this.userService.getUsers();

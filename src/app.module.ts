@@ -16,6 +16,7 @@ import { DistrictModule } from './district/district.module';
 import { SubCategoryController } from './sub-category/sub-category.controller';
 import { SubCategoryModule } from './sub-category/sub-category.module';
 import { SubCategoryService } from './sub-category/sub-category.service';
+import { PostModule } from './post/post.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { SubCategoryService } from './sub-category/sub-category.service';
     CityModule,
     DistrictModule,
     SubCategoryModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService],

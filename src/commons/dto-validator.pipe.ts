@@ -17,7 +17,6 @@ export class DtoValidationPipe implements PipeTransform<any> {
     const object = plainToClass(metatype, value);
     const errors = await validate(object);
     if (errors.length > 0) {
-      console.log(errors);
       throw new SchemaError(errors);
     }
     return value;
