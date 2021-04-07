@@ -3,7 +3,7 @@ import BaseService from '../base/base.service';
 import PostEntity, { PostStatus } from './post.entity';
 import { CreatePostDTO, PostResponseDTO, RejectPostDTO, UpdatePostDTO } from './post.dto';
 import { CategoryService } from '../category/category.service';
-import { join, match, set, unwind } from '../utils/mongo/aggregate-tools';
+import { join, joinMany2One, match, set, unwind } from '../utils/mongo/aggregate-tools';
 import { NoPermissionError } from '../commons/auth.exception';
 import { CityService } from '../city/city.service';
 import { DistrictService } from '../district/district.service';
@@ -20,21 +20,10 @@ export class PostService extends BaseService<PostEntity> {
 
   static baseAggregate(): object[] {
     return [
-      join('Category', 'categoryID', '_id', 'category'),
-      unwind('$category'),
-      set({ category: '$category.name' }),
-
-      join('User', 'createdBy', '_id', 'createdName'),
-      unwind('$createdName'),
-      set({ createdName: '$createdName.name' }),
-
-      join('District', 'districtID', '_id', 'district'),
-      unwind('$district'),
-      set({ district: '$district.name' }),
-
-      join('City', 'cityID', '_id', 'city'),
-      unwind('$city'),
-      set({ city: '$city.name' }),
+      ...joinMany2One('Category', 'categoryID', '_id', 'category','name'),
+      ...joinMany2One('User', 'createdBy', '_id', 'createdName','name'),
+      ...joinMany2One('District', 'districtID', '_id', 'district','name'),
+      ...joinMany2One('City', 'cityID', '_id', 'city','name'),
     ];
   }
 

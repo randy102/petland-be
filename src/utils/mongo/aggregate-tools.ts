@@ -1,3 +1,13 @@
+export function joinMany2One(target: string, localField: string, foreignField: string, as: string, displayField: string){
+  const setOptions = {}
+  setOptions[as] = '$'+as+'.'+displayField
+  return [
+    join(target, localField,foreignField, as),
+    unwind('$'+as),
+    set(setOptions)
+  ]
+}
+
 export function join(target: string, localField: string, foreignField: string, as: string): object {
   return {
     $lookup: {
