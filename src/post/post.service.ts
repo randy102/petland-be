@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import BaseService from '../base/base.service';
 import PostEntity, { PostStatus } from './post.entity';
-import { CreatePostDTO, PostResponseDTO, UpdatePostDTO } from './post.dto';
+import { CreatePostDTO, PostResponseDTO, RejectPostDTO, UpdatePostDTO } from './post.dto';
 import { CategoryService } from '../category/category.service';
 import { join, match, set, unwind } from '../utils/mongo/aggregate-tools';
 import { NoPermissionError } from '../commons/auth.exception';
@@ -79,11 +79,85 @@ export class PostService extends BaseService<PostEntity> {
 
   async confirmPost(id: string, updatedBy: string): Promise<PostEntity> {
     const existed = await this.checkExistedId(id);
-    const isPostOwner = existed.createdBy === updatedBy;
-    if (!isPostOwner) throw new NoPermissionError();
+    await this.checkPostOwner(existed, updatedBy)
+    if(existed.state != PostStatus.DRAFT) {
+      throw new HttpException("Only confirm post in draft state!", HttpStatus.BAD_REQUEST)
+    }
     return this.save({
       ...existed,
       state: PostStatus.PENDING,
+      updatedBy,
+    });
+  }
+
+  async hidePost(id: string, updatedBy: string): Promise<PostEntity> {
+    const existed = await this.checkExistedId(id);
+    await this.checkPostOwner(existed, updatedBy)
+    if(existed.state != PostStatus.PUBLISHED) {
+      throw new HttpException("Only hide post in published state!", HttpStatus.BAD_REQUEST)
+    }
+    return this.save({
+      ...existed,
+      state: PostStatus.HIDDEN,
+      updatedBy,
+    });
+  }
+
+  async publishPost(id: string, updatedBy: string): Promise<PostEntity> {
+    const existed = await this.checkExistedId(id);
+    await this.checkPostOwner(existed, updatedBy)
+    if(existed.state != PostStatus.HIDDEN) {
+      throw new HttpException("Only publish post in hidden state!", HttpStatus.BAD_REQUEST)
+    }
+    return this.save({
+      ...existed,
+      state: PostStatus.PUBLISHED,
+      updatedBy,
+    });
+  }
+
+  async checkPostOwner(post: PostEntity, uid: string): Promise<void>{
+    const isPostOwner = post.createdBy === uid;
+    if (!isPostOwner) throw new NoPermissionError();
+  }
+
+  async cancelPost(id: string, updatedBy: string): Promise<PostEntity> {
+    const existed = await this.checkExistedId(id);
+    await this.checkPostOwner(existed, updatedBy)
+    if(existed.state != PostStatus.PENDING) {
+      throw new HttpException("Only cancel post in pending state!", HttpStatus.BAD_REQUEST)
+    }
+    return this.save({
+      ...existed,
+      state: PostStatus.DRAFT,
+      updatedBy,
+    });
+  }
+
+  async verifyPost(id: string, updatedBy: string): Promise<PostEntity> {
+    const existed = await this.checkExistedId(id);
+
+    if(existed.state != PostStatus.PENDING) {
+      throw new HttpException("Only verify post in pending state!", HttpStatus.BAD_REQUEST)
+    }
+    return this.save({
+      ...existed,
+      state: PostStatus.PUBLISHED,
+      updatedBy,
+    });
+  }
+
+  async rejectPost(id: string, body: RejectPostDTO, updatedBy: string): Promise<PostEntity> {
+    const existed = await this.checkExistedId(id);
+
+    if(existed.state != PostStatus.PENDING) {
+      throw new HttpException("Only reject post in pending state!", HttpStatus.BAD_REQUEST)
+    }
+
+    return this.save({
+      ...existed,
+      state: PostStatus.REJECTED,
+      rejectedReason: body.reason,
       updatedBy,
     });
   }

@@ -11,7 +11,7 @@ export enum PetSex {
 export enum PostStatus {
     DRAFT = 'DRAFT',
     PENDING = 'PENDING',
-    VERIFIED = 'VERIFIED',
+    PUBLISHED = 'PUBLISHED',
     REJECTED = 'REJECTED',
     HIDDEN = 'HIDDEN'
 }
@@ -87,6 +87,11 @@ export default class PostEntity extends BaseEntity<PostEntity>{
     @Column()
     @Expose()
     state: PostStatus;
+
+    @ApiProperty()
+    @Column()
+    @Expose()
+    rejectedReason: string
 
     constructor(post: Partial<PostEntity>){
         super(post, PostEntity);
