@@ -157,4 +157,8 @@ export class PostService extends BaseService<PostEntity> {
       ...PostService.baseAggregate()
     ]))[0]
   }
+
+  deletePost(id: string): Promise<boolean> {
+    return this.delete([id])
+  }
 }

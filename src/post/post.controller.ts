@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { PostService } from './post.service';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -116,5 +116,14 @@ export class PostController {
   })
   rejectPost(@Param('id') id: string, @Body() body: RejectPostDTO, @User() user: UserEntity): Promise<PostEntity> {
     return this.postService.rejectPost(id, body, user._id);
+  }
+
+  @Delete(':id')
+  @ApiResponse({
+    type: Boolean,
+    description: 'User can delete post'
+  })
+  deletePost(@Param('id') id: string, @User() user: UserEntity): Promise<boolean> {
+    return this.postService.deletePost(id);
   }
 }
