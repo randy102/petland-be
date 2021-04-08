@@ -8,7 +8,7 @@ import { DistrictService } from './district.service';
   controllers: [DistrictController],
   providers: [DistrictService],
   imports: [
-    TypeOrmModule.forFeature([DistrictEntity]),
+    TypeOrmModule.forFeature([DistrictEntity])
   ],
   exports: [DistrictService]
 })
