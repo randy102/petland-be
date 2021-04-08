@@ -158,7 +158,9 @@ export class PostService extends BaseService<PostEntity> {
     ]))[0]
   }
 
-  deletePost(id: string): Promise<boolean> {
+  async deletePost(id: string, uid: string): Promise<boolean> {
+    const existed = await this.checkExistedId(id)
+    await this.checkPostOwner(existed, uid)
     return this.delete([id])
   }
 }

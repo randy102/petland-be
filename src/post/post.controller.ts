@@ -124,6 +124,6 @@ export class PostController {
     description: 'User can delete post'
   })
   deletePost(@Param('id') id: string, @User() user: UserEntity): Promise<boolean> {
-    return this.postService.deletePost(id);
+    return this.postService.deletePost(id, user._id);
   }
 }
