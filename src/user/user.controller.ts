@@ -1,11 +1,11 @@
-import { Body, Controller, Get, HttpStatus, Param, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Put, Query, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import UserEntity, { UserRole } from './user.entity';
 import { Roles, RolesGuard } from '../auth/roles.guard';
 import { User } from './user.decorator';
-import { ChangePasswordDTO, ChangeUserRoleDTO, LockUserDTO, UpdateProfileDTO, UserResponseDTO } from './user.dto';
+import { ChangePasswordDTO, ChangeUserRoleDTO, DeleteUserDTO, LockUserDTO, UpdateProfileDTO, UserResponseDTO } from './user.dto';
 
 @Controller('api/user')
 @ApiTags('User')
@@ -59,5 +59,12 @@ export class UserController {
   @ApiResponse({type: UserEntity, status: HttpStatus.OK})
   changeRole(@Body() body: ChangeUserRoleDTO, @User() user: UserEntity): Promise<UserEntity>{
     return this.userService.changeRole(body, user._id);
+  }
+
+  @Delete()
+  @Roles(UserRole.ADMIN)
+  @ApiResponse({type: Boolean, status: HttpStatus.OK})
+  deleteUsers(@Body() body: DeleteUserDTO): Promise<boolean>{
+    return this.userService.deleteUsers(body);
   }
 }

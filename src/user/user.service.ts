@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { HashService } from '../utils/hash/hash.service';
 import BaseService from '../base/base.service';
 import UserEntity, { UserRole } from './user.entity';
-import { ChangePasswordDTO, ChangeUserRoleDTO, LockUserDTO, UpdateProfileDTO, UserResponseDTO } from './user.dto';
+import { ChangePasswordDTO, ChangeUserRoleDTO, DeleteUserDTO, LockUserDTO, UpdateProfileDTO, UserResponseDTO } from './user.dto';
 import { DuplicateError, FieldError } from '../commons/data.exception';
 
 @Injectable()
@@ -74,5 +74,10 @@ export class UserService extends BaseService<UserEntity> {
         HttpStatus.BAD_GATEWAY
       );
     }
+  }
+
+  async deleteUsers(body: DeleteUserDTO): Promise<boolean> {
+    await this.checkExistedIds(body.ids);
+    return this.delete(body.ids);
   }
 }
