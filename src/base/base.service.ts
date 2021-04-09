@@ -1,6 +1,7 @@
 import { FindManyOptions, FindOneOptions, getMongoRepository, ObjectID, ObjectLiteral } from 'typeorm';
 import { DuplicateError, NotFoundError } from 'src/commons/data.exception';
 import { BaseEntity } from './base.entity';
+import { sort } from '../utils/mongo/aggregate-tools';
 
 
 export default class BaseService<E extends BaseEntity<E>> {
@@ -12,8 +13,18 @@ export default class BaseService<E extends BaseEntity<E>> {
     this.Name = name;
   }
 
-  find(query?: FindManyOptions<E> | Partial<E>): Promise<E[]> {
-    return getMongoRepository<E>(this.Entity).find(query);
+  sortByField(orderBy: string) {
+    return function(a: E, b: E): number {
+      const [field, orderType] = orderBy.split(' ');
+      const compare = a[field] > b[field];
+      const actual = orderType == 'ASC' ? compare : !compare;
+      return actual ? 1 : -1;
+    };
+  }
+
+  async find(query?: FindManyOptions<E> | Partial<E>, orderBy: string = 'createdAt DESC'): Promise<E[]> {
+    const result = await getMongoRepository<E>(this.Entity).find(query);
+    return result.sort(this.sortByField(orderBy));
   }
 
   findOne(query?: string | number | Date | ObjectID | FindOneOptions<E> | Partial<E>): Promise<E> {
@@ -62,6 +73,6 @@ export default class BaseService<E extends BaseEntity<E>> {
   }
 
   aggregate(pipe: ObjectLiteral[]): Promise<any[]> {
-    return getMongoRepository<E>(this.Entity).aggregate(pipe).toArray();
+    return getMongoRepository<E>(this.Entity).aggregate([sort('createdAt', -1), ...pipe]).toArray();
   }
 }

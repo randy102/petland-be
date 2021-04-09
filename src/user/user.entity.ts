@@ -9,7 +9,7 @@ export enum UserRole {
   USER = 'USER',
 }
 
-@Entity({ name: 'User' })
+@Entity({ name: 'User', orderBy: {createdAt: 'ASC'} })
 export default class UserEntity extends BaseEntity<UserEntity> {
   @ApiProperty()
   @Column()

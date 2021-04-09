@@ -19,6 +19,12 @@ export function join(target: string, localField: string, foreignField: string, a
   };
 }
 
+export function sort(field: string, sortType: 1 | -1){
+  const options = {}
+  options[field] = sortType
+  return {$sort: options}
+}
+
 export function unwind(path: string, preserveNullAndEmptyArrays: boolean = true): object{
   return { $unwind: { path, preserveNullAndEmptyArrays } }
 }
