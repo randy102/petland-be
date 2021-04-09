@@ -38,7 +38,7 @@ export class CategoryController {
 
     @Delete(':id')
     @Roles(UserRole.ADMIN)
-    @ApiResponse({type: CategoryEntity, status: HttpStatus.OK})
+    @ApiResponse({type: Boolean, status: HttpStatus.OK})
     deleteCategory(@Param('id') id: string): Promise<Boolean>{
         return this.categoryService.deleteCategory(id);
     }

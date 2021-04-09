@@ -15,6 +15,7 @@ import { DistrictModule } from '../district/district.module';
     CategoryModule,
     CityModule,
     DistrictModule
-  ]
+  ],
+  exports: [PostService]
 })
 export class PostModule {}

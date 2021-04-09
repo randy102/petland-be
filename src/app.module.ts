@@ -17,6 +17,9 @@ import { SubCategoryController } from './sub-category/sub-category.controller';
 import { SubCategoryModule } from './sub-category/sub-category.module';
 import { SubCategoryService } from './sub-category/sub-category.service';
 import { PostModule } from './post/post.module';
+import { QaController } from './qa/qa.controller';
+import { QaModule } from './qa/qa.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -32,6 +35,8 @@ import { PostModule } from './post/post.module';
     DistrictModule,
     SubCategoryModule,
     PostModule,
+    QaModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -38,7 +38,7 @@ export class CategoryService extends BaseService<CategoryEntity>{
   }
 
   async deleteCategory(id: string): Promise<Boolean>{
-      const category = await this.checkExisted({_id: id});
-      return this.delete([id]);
+        await this.checkExistedId(id);
+        return this.delete([id]);
   }
 }

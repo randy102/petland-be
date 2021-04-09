@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsString } from "src/commons/custom-validator";
 import SubCategoryEntity from "./sub-category.entity";
 
-export class SubCategoryDto{
+export class SubCategoryDTO{
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
@@ -15,7 +15,7 @@ export class SubCategoryDto{
 
 }
 
-export class UpdateSubCategoryDto{
+export class UpdateSubCategoryDTO{
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
