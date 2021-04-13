@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import PostEntity from './post.entity';
 import { CityModule } from '../city/city.module';
 import { DistrictModule } from '../district/district.module';
+import { SubCategoryModule } from '../sub-category/sub-category.module';
 
 @Module({
   controllers: [PostController],
@@ -14,7 +15,8 @@ import { DistrictModule } from '../district/district.module';
     TypeOrmModule.forFeature([PostEntity]),
     CategoryModule,
     CityModule,
-    DistrictModule
+    DistrictModule,
+    SubCategoryModule
   ],
   exports: [PostService]
 })

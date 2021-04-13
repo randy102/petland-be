@@ -7,6 +7,7 @@ import { join, joinMany2One, match, set, unwind } from '../utils/mongo/aggregate
 import { NoPermissionError } from '../commons/auth.exception';
 import { CityService } from '../city/city.service';
 import { DistrictService } from '../district/district.service';
+import { SubCategoryService } from '../sub-category/sub-category.service';
 
 @Injectable()
 export class PostService extends BaseService<PostEntity> {
@@ -14,6 +15,7 @@ export class PostService extends BaseService<PostEntity> {
     private readonly categoryService: CategoryService,
     private readonly cityService: CityService,
     private readonly districtService: DistrictService,
+    private readonly subCategoryService: SubCategoryService
   ) {
     super(PostEntity, 'Bài đăng');
   }
@@ -21,6 +23,7 @@ export class PostService extends BaseService<PostEntity> {
   static baseAggregate(): object[] {
     return [
       ...joinMany2One('Category', 'categoryID', '_id', 'category','name'),
+      ...joinMany2One('SubCategory', 'subCategoryID', '_id', 'subCategory','name'),
       ...joinMany2One('User', 'createdBy', '_id', 'createdName','name'),
       ...joinMany2One('District', 'districtID', '_id', 'district','name'),
       ...joinMany2One('City', 'cityID', '_id', 'city','name'),
@@ -43,7 +46,7 @@ export class PostService extends BaseService<PostEntity> {
 
   async foreignCheck(data: CreatePostDTO): Promise<void> {
     await this.categoryService.checkExistedId(data.categoryID);
-    // TODO: Check subcategory
+    await this.subCategoryService.checkExistedId(data.subCategoryID);
     await this.cityService.checkExistedId(data.cityID);
     await this.districtService.checkExistedId(data.districtID);
   }

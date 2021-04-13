@@ -19,7 +19,7 @@ export class PostController {
   @Get('user')
   @ApiResponse({
     type: [PostResponseDTO],
-    description: 'User can see its posts'
+    description: 'User can see his posts'
   })
   getUserPost(@User() user: UserEntity): Promise<PostResponseDTO[]> {
     return this.postService.getByUser(user._id);
@@ -37,7 +37,7 @@ export class PostController {
   @Get()
   @ApiResponse({
     type: [PostResponseDTO],
-    description: 'Admin can see all posts'
+    description: 'Admin, Mod can see all posts'
   })
   @Roles(UserRole.ADMIN)
   getAllPost(): Promise<PostResponseDTO[]> {
@@ -56,7 +56,7 @@ export class PostController {
   @Put()
   @ApiResponse({
     type: PostEntity,
-    description: 'User can update post, then post return to draft'
+    description: 'User can update his own post, then post return to draft'
   })
   updatePost(@Body() body: UpdatePostDTO, @User() user: UserEntity): Promise<PostEntity> {
     return this.postService.update(body, user._id);
@@ -65,7 +65,7 @@ export class PostController {
   @Put('confirm/:id')
   @ApiResponse({
     type: PostEntity,
-    description: 'User can submit post, then post\'s state change to pending so that admin can verify'
+    description: 'User can submit his own post, then post\'s state change to pending so that admin can verify'
   })
   confirmPost(@Param('id') id: string, @User() user: UserEntity): Promise<PostEntity> {
     return this.postService.confirmPost(id, user._id);
