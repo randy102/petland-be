@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { IsArray } from "class-validator";
 import { IsString, IsNotEmpty } from "src/commons/custom-validator";
 
 export class CategoryDto{
@@ -18,4 +19,11 @@ export class UpdateCategoryDto{
     @IsString()
     @IsNotEmpty()
     newName: string;
+}
+
+export class DeleteCategoryDto{
+    @ApiProperty()
+    @IsString({each: true})
+    @IsArray()
+    ids: string[];
 }

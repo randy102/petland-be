@@ -4,7 +4,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { User } from 'src/user/user.decorator';
 import UserEntity from 'src/user/user.entity';
-import { CommentResponseDTO, CreateCommentDTO, EditCommentDTO } from './comment.dto';
+import { CommentResponseDTO, CreateCommentDTO, DeleteCommentDto, EditCommentDTO } from './comment.dto';
 import CommentEntity from './comment.entity';
 import { CommentService } from './comment.service';
 
@@ -33,9 +33,9 @@ export class CommentController {
         return this.commentService.editComment(body, user._id);
     }
 
-    @Delete(':id')
+    @Delete()
     @ApiResponse({ type: Boolean, status: HttpStatus.OK})
-    DeleteComment(@Param('id') id: string, @User() user: UserEntity): Promise<Boolean>{
-        return this.commentService.deleteComment(id, user._id);
+    DeleteComment(@Body() body: DeleteCommentDto, @User() user: UserEntity): Promise<Boolean>{
+        return this.commentService.deleteComment(body, user._id);
     }
 }

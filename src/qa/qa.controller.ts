@@ -5,7 +5,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Roles, RolesGuard } from 'src/auth/roles.guard';
 import { User } from 'src/user/user.decorator';
 import UserEntity, { UserRole } from 'src/user/user.entity';
-import { CreateQaDTO, EditQaDTO, QaResponseDTO } from './qa.dto';
+import { CreateQaDTO, DeleteQaDto, EditQaDTO, QaResponseDTO } from './qa.dto';
 import QaEntity from './qa.entity';
 import { QaService } from './qa.service';
 
@@ -35,9 +35,9 @@ export class QaController{
         return this.qaService.editQa(body, user._id);
     }
 
-    @Delete(':id')
+    @Delete()
     @ApiResponse({type: Boolean, status: HttpStatus.OK})
-    deleteQa(@Param('id') id: string,@User() user: UserEntity): Promise<Boolean>{
-        return this.qaService.deleteQa(id, user._id);
+    deleteQa(@Body() body: DeleteQaDto,@User() user: UserEntity): Promise<Boolean>{
+        return this.qaService.deleteQa(body, user._id);
     }
 }

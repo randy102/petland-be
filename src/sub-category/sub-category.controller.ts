@@ -5,7 +5,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Roles, RolesGuard } from 'src/auth/roles.guard';
 import { User } from 'src/user/user.decorator';
 import UserEntity, { UserRole } from 'src/user/user.entity';
-import { SubCategoryDTO, SubCategoryResponseDTO, UpdateSubCategoryDTO } from './sub-category.dto';
+import { DeleteSubCategoryDto, SubCategoryDTO, SubCategoryResponseDTO, UpdateSubCategoryDTO } from './sub-category.dto';
 import SubCategoryEntity from './sub-category.entity';
 import { SubCategoryService } from './sub-category.service';
 
@@ -38,11 +38,11 @@ export class SubCategoryController {
         return this.subCategoryService.updateSubCategory(body, user._id);
     }
 
-    @Delete(':id')
+    @Delete()
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN)
     @ApiResponse({type: Boolean, status: HttpStatus.OK})
-    deleteSubCategory(@Param('id') id: string): Promise<boolean>{
-        return this.subCategoryService.deleteSubCategory(id);
+    deleteSubCategory(@Body() body: DeleteSubCategoryDto): Promise<boolean>{
+        return this.subCategoryService.deleteSubCategory(body);
     }
 }

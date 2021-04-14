@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Expose } from "class-transformer";
+import { IsArray } from "class-validator";
 import { IsNotEmpty, IsString } from "src/commons/custom-validator";
 import { Column } from "typeorm";
 import QaEntity from "./qa.entity";
@@ -24,6 +25,13 @@ export class EditQaDTO{
     @IsString()
     @IsNotEmpty()
     newDetail: string;
+}
+
+export class DeleteQaDto{
+    @ApiProperty()
+    @IsString({each: true})
+    @IsArray()
+    ids: string[];
 }
 
 

@@ -4,7 +4,7 @@ import { JwtAuthGuard, Public } from 'src/auth/jwt-auth.guard';
 import { Roles, RolesGuard } from 'src/auth/roles.guard';
 import { User } from 'src/user/user.decorator';
 import UserEntity, { UserRole } from 'src/user/user.entity';
-import { CategoryDto, UpdateCategoryDto } from './category.dto';
+import { CategoryDto, DeleteCategoryDto, UpdateCategoryDto } from './category.dto';
 import CategoryEntity from './category.entity';
 import { CategoryService } from './category.service';
 
@@ -36,10 +36,10 @@ export class CategoryController {
         return this.categoryService.updateCategory(body, user._id);
     }
 
-    @Delete(':id')
+    @Delete()
     @Roles(UserRole.ADMIN)
-    @ApiResponse({type: Boolean, status: HttpStatus.OK})
-    deleteCategory(@Param('id') id: string): Promise<Boolean>{
-        return this.categoryService.deleteCategory(id);
+    @ApiResponse({type: Boolean,status: HttpStatus.OK})
+    deleteCategory(@Body() body: DeleteCategoryDto): Promise<Boolean>{
+        return this.categoryService.deleteCategory(body);
     }
 }

@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import BaseService from "src/base/base.service";
 import { joinMany2One, match, set } from "src/utils/mongo/aggregate-tools";
 import { PostService } from "../post/post.service";
-import { CreateQaDTO, EditQaDTO, QaResponseDTO } from "./qa.dto";
+import { CreateQaDTO, DeleteQaDto, EditQaDTO, QaResponseDTO } from "./qa.dto";
 import QaEntity from "./qa.entity";
 
 
@@ -43,11 +43,14 @@ export class QaService extends BaseService<QaEntity>{
       })
     }
 
-    async deleteQa(id: string, userId: string): Promise<Boolean>{
-      const qa = await this.checkExisted({ _id: id});
-      if(!(userId == qa.createdBy)){
-        throw new HttpException("Chỉ có người tạo được quyền xóa", HttpStatus.BAD_REQUEST)
+    async deleteQa(data: DeleteQaDto, userId: string): Promise<Boolean>{
+      const qas = await this.checkExistedIds(data.ids);
+      
+      for(let qa of qas){
+        if(!(userId == qa.createdBy)){
+          throw new HttpException("Chỉ có người tạo được quyền xóa", HttpStatus.BAD_REQUEST)
+        }
       }
-      return this.delete([id]);
+      return this.delete(data.ids);
     }
 }
