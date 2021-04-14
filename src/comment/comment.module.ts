@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { QaModule } from 'src/qa/qa.module';
 import { CommentController } from './comment.controller';
@@ -10,7 +10,7 @@ import { CommentService } from './comment.service';
   providers: [CommentService],
   imports: [
     TypeOrmModule.forFeature([CommentEntity]),
-    QaModule
+    forwardRef(() => QaModule),
   ],
   exports: [CommentService]
 })

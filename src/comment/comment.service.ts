@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import BaseService from "src/base/base.service";
 import { QaService } from "src/qa/qa.service";
 import { joinMany2One, match } from "src/utils/mongo/aggregate-tools";
@@ -8,7 +8,9 @@ import CommentEntity from "./comment.entity";
 
 @Injectable()
 export class CommentService extends BaseService<CommentEntity>{
-    constructor( private readonly qaService: QaService) {
+    constructor( 
+        @Inject(forwardRef(() => QaService))
+        private readonly qaService: QaService) {
           super(CommentEntity, 'Bình luận');
     }
 
