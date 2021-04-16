@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { PostController } from './post.controller';
 import { PostService } from './post.service';
 import { CategoryModule } from '../category/category.module';
@@ -13,10 +13,10 @@ import { SubCategoryModule } from '../sub-category/sub-category.module';
   providers: [PostService],
   imports: [
     TypeOrmModule.forFeature([PostEntity]),
-    CategoryModule,
+    forwardRef(() =>CategoryModule),
     CityModule,
     DistrictModule,
-    SubCategoryModule
+    forwardRef(() => SubCategoryModule),
   ],
   exports: [PostService]
 })

@@ -1,14 +1,16 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import BaseService from "src/base/base.service";
 import { QaService } from "src/qa/qa.service";
 import { joinMany2One, match } from "src/utils/mongo/aggregate-tools";
-import { CommentResponseDTO, CreateCommentDTO, EditCommentDTO } from "./comment.dto";
+import { CommentResponseDTO, CreateCommentDTO, DeleteCommentDto, EditCommentDTO } from "./comment.dto";
 import CommentEntity from "./comment.entity";
 
 
 @Injectable()
 export class CommentService extends BaseService<CommentEntity>{
-    constructor( private readonly qaService: QaService) {
+    constructor( 
+        @Inject(forwardRef(() => QaService))
+        private readonly qaService: QaService) {
           super(CommentEntity, 'Bình luận');
     }
 
@@ -41,12 +43,15 @@ export class CommentService extends BaseService<CommentEntity>{
         })
     }
 
-    async deleteComment(id: string, userID: string): Promise<Boolean>{
-        const comment = await this.checkExistedId(id);
-        if(!(userID == comment.createdBy)){
-            throw new HttpException("Chỉ có người tạo được quyền xóa", HttpStatus.BAD_REQUEST);
+    async deleteComment(data: DeleteCommentDto, userID: string): Promise<Boolean>{
+        const comments = await this.checkExistedIds(data.ids);
+        
+        for(let comment of comments){
+            if(!(userID == comment.createdBy)){
+                throw new HttpException("Chỉ có người tạo được quyền xóa", HttpStatus.BAD_REQUEST);
+            }
         }
-        return this.delete([id]);
+        return this.delete(data.ids);
     }    
 
 }

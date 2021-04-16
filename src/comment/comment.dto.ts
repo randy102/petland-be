@@ -1,5 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Expose } from "class-transformer";
+import { IsArray } from "class-validator";
+import { IsString } from "src/commons/custom-validator";
 import { Column } from "typeorm";
 import CommentEntity from "./comment.entity";
 
@@ -23,4 +25,10 @@ export class CommentResponseDTO extends CreateCommentDTO{
 
     @ApiProperty()
     createdName: string;
+}
+export class DeleteCommentDto{
+    @ApiProperty()
+    @IsString({each: true})
+    @IsArray()
+    ids: string[];
 }

@@ -1,15 +1,15 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { equals } from 'class-validator';
-import { throwError } from 'rxjs';
+import {forwardRef, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import BaseService from 'src/base/base.service';
-import { DuplicateError, NotFoundError } from 'src/commons/data.exception';
-import UserEntity from 'src/user/user.entity';
-import { CategoryDto, UpdateCategoryDto } from './category.dto';
+import { SubCategoryService } from 'src/sub-category/sub-category.service';
+import { CategoryDto, DeleteCategoryDto, UpdateCategoryDto } from './category.dto';
 import CategoryEntity from './category.entity';
 
 @Injectable()
 export class CategoryService extends BaseService<CategoryEntity>{
-  constructor(){
+  constructor(
+    @Inject(forwardRef(() => SubCategoryService))
+    private readonly subCategoryService: SubCategoryService,
+  ){
       super(CategoryEntity, 'Loại thú cưng');
   }
 
@@ -37,8 +37,14 @@ export class CategoryService extends BaseService<CategoryEntity>{
       return updateCategory;
   }
 
-  async deleteCategory(id: string): Promise<Boolean>{
-        await this.checkExistedId(id);
-        return this.delete([id]);
+  async deleteCategory(data: DeleteCategoryDto): Promise<Boolean>{
+        const categories = await this.checkExistedIds(data.ids);
+
+        for(let category of categories){
+            if((await this.subCategoryService.find({categoryID: category._id})).length){
+                throw new HttpException("Giống của " + category.name + " đã được tạo, không thể xóa loại thú cưng này", HttpStatus.BAD_REQUEST)
+            }
+        }
+        return this.delete(data.ids);
   }
 }

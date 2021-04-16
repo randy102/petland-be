@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import BaseService from '../base/base.service';
 import PostEntity, { PostStatus } from './post.entity';
 import { CreatePostDTO, PostResponseDTO, RejectPostDTO, UpdatePostDTO } from './post.dto';
@@ -15,6 +15,7 @@ export class PostService extends BaseService<PostEntity> {
     private readonly categoryService: CategoryService,
     private readonly cityService: CityService,
     private readonly districtService: DistrictService,
+    @Inject(forwardRef(() => SubCategoryService))
     private readonly subCategoryService: SubCategoryService
   ) {
     super(PostEntity, 'Bài đăng');
