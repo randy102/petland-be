@@ -23,6 +23,7 @@ export class PhotoService {
       Bucket: this.BUCKET_NAME,
       Key: id,
       Body: file.buffer,
+      ContentType: 'image/jpeg'
     };
     return new Promise((resolve) => {
       this.S3.upload(params, (err, data) => {
