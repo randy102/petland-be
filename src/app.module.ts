@@ -17,6 +17,7 @@ import { SubCategoryModule } from './sub-category/sub-category.module';
 import { PostModule } from './post/post.module';
 import { QaModule } from './qa/qa.module';
 import { CommentModule } from './comment/comment.module';
+import { AdsModule } from './ads/ads.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { CommentModule } from './comment/comment.module';
     PostModule,
     QaModule,
     CommentModule,
+    AdsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
