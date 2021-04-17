@@ -2,7 +2,7 @@ import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from "@nest
 import BaseService from "src/base/base.service";
 import { QaService } from "src/qa/qa.service";
 import { joinMany2One, match } from "src/utils/mongo/aggregate-tools";
-import { CommentResponseDTO, CreateCommentDTO, DeleteCommentDto, EditCommentDTO } from "./comment.dto";
+import { CommentResponseDTO, CreateCommentDTO, DeleteCommentDTO, EditCommentDTO } from "./comment.dto";
 import CommentEntity from "./comment.entity";
 
 
@@ -43,7 +43,7 @@ export class CommentService extends BaseService<CommentEntity>{
         })
     }
 
-    async deleteComment(data: DeleteCommentDto, userID: string): Promise<Boolean>{
+    async deleteComment(data: DeleteCommentDTO, userID: string): Promise<Boolean>{
         const comments = await this.checkExistedIds(data.ids);
         
         for(let comment of comments){

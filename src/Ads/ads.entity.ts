@@ -15,13 +15,15 @@ export default class AdsEntity extends BaseEntity<AdsEntity>{
     @Expose()
     url: string;
 
-    @ApiProperty({ type: 'string', format: 'binary' })
-    file: any;
+    @ApiProperty()
+    @Column()
+    @Expose()
+    fileID: string;
 
     @ApiProperty()
     @Column()
     @Expose()
-    location: string;
+    position: string;
 
     constructor(ads: Partial<AdsEntity>){
         super(ads, AdsEntity);

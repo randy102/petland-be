@@ -4,7 +4,7 @@ import { JwtAuthGuard, Public } from 'src/auth/jwt-auth.guard';
 import { Roles, RolesGuard } from 'src/auth/roles.guard';
 import { User } from 'src/user/user.decorator';
 import UserEntity, { UserRole } from 'src/user/user.entity';
-import { CategoryDto, DeleteCategoryDto, UpdateCategoryDto } from './category.dto';
+import { CategoryDTO, DeleteCategoryDTO, UpdateCategoryDTO } from './category.dto';
 import CategoryEntity from './category.entity';
 import { CategoryService } from './category.service';
 
@@ -18,7 +18,7 @@ export class CategoryController {
     @Post()
     @Roles(UserRole.ADMIN)
     @ApiResponse({type: CategoryEntity, status: HttpStatus.OK})
-    createCategory(@Body() body: CategoryDto,@User() user: UserEntity): Promise<CategoryEntity>{
+    createCategory(@Body() body: CategoryDTO,@User() user: UserEntity): Promise<CategoryEntity>{
         return this.categoryService.createCategory(body, user._id);
     }
 
@@ -32,14 +32,14 @@ export class CategoryController {
     @Put()
     @Roles(UserRole.ADMIN)
     @ApiResponse({type: CategoryEntity, status: HttpStatus.OK})
-    updateCategory(@Body() body: UpdateCategoryDto, @User() user: UserEntity): Promise<CategoryEntity>{
+    updateCategory(@Body() body: UpdateCategoryDTO, @User() user: UserEntity): Promise<CategoryEntity>{
         return this.categoryService.updateCategory(body, user._id);
     }
 
     @Delete()
     @Roles(UserRole.ADMIN)
     @ApiResponse({type: Boolean,status: HttpStatus.OK})
-    deleteCategory(@Body() body: DeleteCategoryDto): Promise<Boolean>{
+    deleteCategory(@Body() body: DeleteCategoryDTO): Promise<Boolean>{
         return this.categoryService.deleteCategory(body);
     }
 }

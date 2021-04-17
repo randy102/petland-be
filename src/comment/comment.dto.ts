@@ -26,7 +26,7 @@ export class CommentResponseDTO extends CreateCommentDTO{
     @ApiProperty()
     createdName: string;
 }
-export class DeleteCommentDto{
+export class DeleteCommentDTO{
     @ApiProperty()
     @IsString({each: true})
     @IsArray()
