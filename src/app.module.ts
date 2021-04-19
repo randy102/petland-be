@@ -18,6 +18,7 @@ import { PostModule } from './post/post.module';
 import { QaModule } from './qa/qa.module';
 import { CommentModule } from './comment/comment.module';
 import { AdsModule } from './ads/ads.module';
+import { PackModule } from './pack/pack.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { AdsModule } from './ads/ads.module';
     QaModule,
     CommentModule,
     AdsModule,
+    PackModule,
   ],
   controllers: [AppController],
   providers: [AppService],

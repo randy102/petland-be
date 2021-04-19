@@ -38,7 +38,7 @@ export class SubCategoryResponseDTO extends SubCategoryEntity{
     category: string;
 }
 
-export class DeleteSubCategoryDto{
+export class DeleteSubCategoryDTO{
     @ApiProperty()
     @IsString({each: true})
     @IsArray()

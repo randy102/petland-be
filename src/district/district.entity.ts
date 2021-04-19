@@ -10,6 +10,7 @@ export default class DistrictEntity extends BaseEntity<DistrictEntity> {
     @Expose()
     name: string;
 
+    @ApiProperty()
     @Column()
     @Expose()
     cityID: string;

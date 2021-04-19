@@ -3,7 +3,7 @@ import BaseService from 'src/base/base.service';
 import { CategoryService } from 'src/category/category.service';
 import { PostService } from 'src/post/post.service';
 import { joinMany2One, match } from 'src/utils/mongo/aggregate-tools';
-import { DeleteSubCategoryDto, SubCategoryDTO, SubCategoryResponseDTO, UpdateSubCategoryDTO } from './sub-category.dto';
+import { DeleteSubCategoryDTO, SubCategoryDTO, SubCategoryResponseDTO, UpdateSubCategoryDTO } from './sub-category.dto';
 import SubCategoryEntity from './sub-category.entity';
 
 @Injectable()
@@ -49,7 +49,7 @@ export class SubCategoryService extends BaseService<SubCategoryEntity>{
         })
     }
 
-    async deleteSubCategory(data: DeleteSubCategoryDto): Promise<boolean>{
+    async deleteSubCategory(data: DeleteSubCategoryDTO): Promise<boolean>{
         const subCategories = await this.checkExistedIds(data.ids);
 
         for(let subCategory of subCategories){
