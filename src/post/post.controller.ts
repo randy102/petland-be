@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { PostService } from './post.service';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard, Public } from '../auth/jwt-auth.guard';
 import { Roles, RolesGuard } from '../auth/roles.guard';
 import { CreatePostDTO, PostResponseDTO, RejectPostDTO, UpdatePostDTO } from './post.dto';
 import { User } from '../user/user.decorator';
@@ -23,6 +23,16 @@ export class PostController {
   })
   getUserPost(@User() user: UserEntity): Promise<PostResponseDTO[]> {
     return this.postService.getByUser(user._id);
+  }
+
+  @Get('public')
+  @Public()
+  @ApiResponse({
+    type: [PostResponseDTO],
+    description: 'Get all public posts'
+  })
+  getPublicPost(): Promise<PostResponseDTO[]>{
+    return this.postService.getPublic();
   }
 
   @Get(':id')

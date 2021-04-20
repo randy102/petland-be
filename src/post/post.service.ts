@@ -167,4 +167,11 @@ export class PostService extends BaseService<PostEntity> {
     await this.checkPostOwner(existed, uid)
     return this.delete([id])
   }
+
+  getPublic(): Promise<PostResponseDTO[]> {
+    return this.aggregate([
+      match({state: PostStatus.PUBLISHED}),
+      ...PostService.baseAggregate()
+    ])
+  }
 }
