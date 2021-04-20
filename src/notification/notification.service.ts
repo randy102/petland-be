@@ -19,7 +19,7 @@ export class NotificationService extends BaseService<NotificationEntity>{
 
     async listNotification(id: string): Promise<NotificationEntity[]>{
         await this.userService.checkExistedId(id);
-        return this.find({userID: id});
+        return this.find({userID: id, read: false});
     }
 
     async markReadNotification(id: string, updatedBy: string): Promise<NotificationEntity>{
