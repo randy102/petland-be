@@ -18,7 +18,7 @@ export const IsMobilePhone = (
   options?,
   validationOptions?: ValidationOptions,
 ): PropertyDecorator =>
-  _IsMobilePhone(locale, options,{ ...validationOptions, message: 'Số điện thoại không phợp lệ' });
+  _IsMobilePhone(locale, options,{ ...validationOptions, message: 'Số điện thoại không hợp lệ' });
 
 export const IsEmail = (
   options?,
