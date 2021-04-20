@@ -61,7 +61,7 @@ export default class PostEntity extends BaseEntity<PostEntity>{
     @ApiProperty()
     @Column()
     @Expose()
-    age: boolean
+    age: number
 
     @ApiProperty()
     @Column()

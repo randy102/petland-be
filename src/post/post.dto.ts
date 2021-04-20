@@ -41,8 +41,8 @@ export class CreatePostDTO{
     vaccination: boolean
 
     @ApiProperty()
-    @IsBoolean()
-    age: boolean
+    @IsNumber()
+    age: number
 
     @ApiProperty()
     @IsNumber()
