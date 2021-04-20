@@ -19,6 +19,7 @@ import { QaModule } from './qa/qa.module';
 import { CommentModule } from './comment/comment.module';
 import { AdsModule } from './ads/ads.module';
 import { PackModule } from './pack/pack.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { PackModule } from './pack/pack.module';
     CommentModule,
     AdsModule,
     PackModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

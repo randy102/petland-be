@@ -21,7 +21,7 @@ export class CategoryController {
     createCategory(@Body() body: CategoryDTO,@User() user: UserEntity): Promise<CategoryEntity>{
         return this.categoryService.createCategory(body, user._id);
     }
-
+    
     @Get()
     @Public()
     @ApiResponse({type: CategoryEntity, status: HttpStatus.OK})
