@@ -36,10 +36,10 @@ export class UserService extends BaseService<UserEntity> {
   }
 
   async changePassWord(data: ChangePasswordDTO, updatedBy: string): Promise<UserEntity> {
-    const user = await this.checkExisted({ _id: updatedBy });
-    const checkDuplication = data.newPassword === data.oldPassword;
-    if (checkDuplication) {
-      throw new DuplicateError('Mật khẩu');
+    const user = await this.checkExistedId(updatedBy);
+    const pwd = this.hashService.create(data.oldPassword);
+    if(pwd != user.password){
+      throw new HttpException("Mật không sai", HttpStatus.NOT_FOUND);
     }
     return this.save({
       ...user,
