@@ -46,6 +46,11 @@ export default class UserEntity extends BaseEntity<UserEntity> {
   @Expose()
   role: UserRole;
 
+  @ApiProperty()
+  @Column()
+  @Expose()
+  points: number
+
   constructor(user: Partial<UserEntity>) {
     super(user, UserEntity);
   }

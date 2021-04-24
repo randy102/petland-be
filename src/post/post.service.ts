@@ -23,11 +23,11 @@ export class PostService extends BaseService<PostEntity> {
 
   static baseAggregate(): object[] {
     return [
-      ...joinMany2One('Category', 'categoryID', '_id', 'category','name'),
-      ...joinMany2One('SubCategory', 'subCategoryID', '_id', 'subCategory','name'),
-      ...joinMany2One('User', 'createdBy', '_id', 'createdName','name'),
-      ...joinMany2One('District', 'districtID', '_id', 'district','name'),
-      ...joinMany2One('City', 'cityID', '_id', 'city','name'),
+      ...joinMany2One('Category', 'categoryID', '_id', 'category', 'name'),
+      ...joinMany2One('SubCategory', 'subCategoryID', '_id', 'subCategory', 'name'),
+      ...joinMany2One('User', 'createdBy', '_id', 'createdName', 'name'),
+      ...joinMany2One('District', 'districtID', '_id', 'district', 'name'),
+      ...joinMany2One('City', 'cityID', '_id', 'city', 'name')
     ];
   }
 
@@ -41,7 +41,7 @@ export class PostService extends BaseService<PostEntity> {
     return this.save({
       ...data,
       state: PostStatus.DRAFT,
-      createdBy,
+      createdBy
     });
   }
 
@@ -59,119 +59,120 @@ export class PostService extends BaseService<PostEntity> {
       ...existed,
       ...data,
       state: PostStatus.DRAFT,
-      updatedBy,
+      updatedBy
     });
   }
 
   async getByUser(id: string): Promise<PostResponseDTO[]> {
     return this.aggregate([
       match({ createdBy: id }),
-      ...PostService.baseAggregate(),
+      ...PostService.baseAggregate()
     ]);
   }
 
   async confirmPost(id: string, updatedBy: string): Promise<PostEntity> {
     const existed = await this.checkExistedId(id);
-    await this.checkPostOwner(existed, updatedBy)
-    if(existed.state != PostStatus.DRAFT) {
-      throw new HttpException("Only confirm post in draft state!", HttpStatus.BAD_REQUEST)
+    await this.checkPostOwner(existed, updatedBy);
+    if (existed.state != PostStatus.DRAFT) {
+      throw new HttpException('Only confirm post in draft state!', HttpStatus.BAD_REQUEST);
     }
     return this.save({
       ...existed,
       state: PostStatus.PENDING,
-      updatedBy,
+      updatedBy
     });
   }
 
   async hidePost(id: string, updatedBy: string): Promise<PostEntity> {
     const existed = await this.checkExistedId(id);
-    await this.checkPostOwner(existed, updatedBy)
-    if(existed.state != PostStatus.PUBLISHED) {
-      throw new HttpException("Only hide post in published state!", HttpStatus.BAD_REQUEST)
+    await this.checkPostOwner(existed, updatedBy);
+    if (existed.state != PostStatus.PUBLISHED) {
+      throw new HttpException('Only hide post in published state!', HttpStatus.BAD_REQUEST);
     }
     return this.save({
       ...existed,
       state: PostStatus.HIDDEN,
-      updatedBy,
+      updatedBy
     });
   }
 
   async publishPost(id: string, updatedBy: string): Promise<PostEntity> {
     const existed = await this.checkExistedId(id);
-    await this.checkPostOwner(existed, updatedBy)
-    if(existed.state != PostStatus.HIDDEN) {
-      throw new HttpException("Only publish post in hidden state!", HttpStatus.BAD_REQUEST)
+    await this.checkPostOwner(existed, updatedBy);
+    if (existed.state != PostStatus.HIDDEN) {
+      throw new HttpException('Only publish post in hidden state!', HttpStatus.BAD_REQUEST);
     }
     return this.save({
       ...existed,
       state: PostStatus.PUBLISHED,
-      updatedBy,
+      updatedBy
     });
   }
 
-  async checkPostOwner(post: PostEntity, uid: string): Promise<void>{
+  async checkPostOwner(post: PostEntity, uid: string): Promise<void> {
     const isPostOwner = post.createdBy === uid;
     if (!isPostOwner) throw new NoPermissionError();
   }
 
   async cancelPost(id: string, updatedBy: string): Promise<PostEntity> {
     const existed = await this.checkExistedId(id);
-    await this.checkPostOwner(existed, updatedBy)
-    if(existed.state != PostStatus.PENDING) {
-      throw new HttpException("Only cancel post in pending state!", HttpStatus.BAD_REQUEST)
+    await this.checkPostOwner(existed, updatedBy);
+    if (existed.state != PostStatus.PENDING) {
+      throw new HttpException('Only cancel post in pending state!', HttpStatus.BAD_REQUEST);
     }
     return this.save({
       ...existed,
       state: PostStatus.DRAFT,
-      updatedBy,
+      updatedBy
     });
   }
 
   async verifyPost(id: string, updatedBy: string): Promise<PostEntity> {
     const existed = await this.checkExistedId(id);
 
-    if(existed.state != PostStatus.PENDING) {
-      throw new HttpException("Only verify post in pending state!", HttpStatus.BAD_REQUEST)
+    if (existed.state != PostStatus.PENDING) {
+      throw new HttpException('Only verify post in pending state!', HttpStatus.BAD_REQUEST);
     }
     return this.save({
       ...existed,
       state: PostStatus.PUBLISHED,
-      updatedBy,
+      updatedBy
     });
   }
 
   async rejectPost(id: string, body: RejectPostDTO, updatedBy: string): Promise<PostEntity> {
     const existed = await this.checkExistedId(id);
 
-    if(existed.state != PostStatus.PENDING) {
-      throw new HttpException("Only reject post in pending state!", HttpStatus.BAD_REQUEST)
+    if (existed.state != PostStatus.PENDING) {
+      throw new HttpException('Only reject post in pending state!', HttpStatus.BAD_REQUEST);
     }
 
     return this.save({
       ...existed,
       state: PostStatus.REJECTED,
       rejectedReason: body.reason,
-      updatedBy,
+      updatedBy
     });
   }
+
   async getDetail(id: string): Promise<PostResponseDTO> {
-    await this.checkExistedId(id)
+    await this.checkExistedId(id);
     return (await this.aggregate([
-      match({_id: id}),
+      match({ _id: id }),
       ...PostService.baseAggregate()
-    ]))[0]
+    ]))[0];
   }
 
   async deletePost(id: string, uid: string): Promise<boolean> {
-    const existed = await this.checkExistedId(id)
-    await this.checkPostOwner(existed, uid)
-    return this.delete([id])
+    const existed = await this.checkExistedId(id);
+    await this.checkPostOwner(existed, uid);
+    return this.delete([id]);
   }
 
   getPublic(): Promise<PostResponseDTO[]> {
     return this.aggregate([
-      match({state: PostStatus.PUBLISHED}),
+      match({ state: PostStatus.PUBLISHED }),
       ...PostService.baseAggregate()
-    ])
+    ]);
   }
 }

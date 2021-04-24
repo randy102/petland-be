@@ -20,6 +20,8 @@ import { CommentModule } from './comment/comment.module';
 import { AdsModule } from './ads/ads.module';
 import { PackModule } from './pack/pack.module';
 import { ReportModule } from './report/report.module';
+import { ChargeRequestModule } from './charge-request/charge-request.module';
+import { PointTransactionModule } from './point-transaction/point-transaction.module';
 
 @Module({
   imports: [
@@ -40,6 +42,8 @@ import { ReportModule } from './report/report.module';
     AdsModule,
     PackModule,
     ReportModule,
+    ChargeRequestModule,
+    PointTransactionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -65,6 +65,7 @@ export class CreatePostDTO{
 
 export class UpdatePostDTO extends CreatePostDTO {
     @ApiProperty()
+    @IsString()
     id: string;
 }
 

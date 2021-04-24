@@ -3,7 +3,6 @@ import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ReportService } from './report.service';
 import ReportEntity from './report.entity';
 import { JwtAuthGuard, Public } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../auth/roles.guard';
 import { CreateReportDTO, ResolveReportDTO } from './report.dto';
 
 @Controller('api/report')

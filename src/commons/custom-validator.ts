@@ -5,39 +5,46 @@ import {
   IsMobilePhone as _IsMobilePhone,
   IsEmail as _IsEmail,
   IsBoolean as _IsBoolean,
-  IsNumber as _IsNumber, IsNumberOptions
+  IsNumber as _IsNumber, IsNumberOptions,
+  IsEnum as _IsEnum
 } from 'class-validator';
 
 export const IsNotEmpty = (
-  validationOptions?: ValidationOptions,
+  validationOptions?: ValidationOptions
 ): PropertyDecorator =>
   _IsNotEmpty({ ...validationOptions, message: 'Không được để trống' });
 
 export const IsMobilePhone = (
   locale?,
   options?,
-  validationOptions?: ValidationOptions,
+  validationOptions?: ValidationOptions
 ): PropertyDecorator =>
-  _IsMobilePhone(locale, options,{ ...validationOptions, message: 'Số điện thoại không hợp lệ' });
+  _IsMobilePhone(locale, options, { ...validationOptions, message: 'Số điện thoại không hợp lệ' });
 
 export const IsEmail = (
   options?,
-  validationOptions?: ValidationOptions,
+  validationOptions?: ValidationOptions
 ): PropertyDecorator =>
   _IsEmail(options, { ...validationOptions, message: 'Email không hợp lệ' });
 
 export const IsString = (
-  validationOptions?: ValidationOptions,
+  validationOptions?: ValidationOptions
 ): PropertyDecorator =>
   _IsString({ ...validationOptions, message: 'Phải là chuỗi' });
 
 export const IsBoolean = (
-  validationOptions?: ValidationOptions,
+  validationOptions?: ValidationOptions
 ): PropertyDecorator =>
   _IsBoolean({ ...validationOptions, message: 'Phải là Boolean' });
 
 export const IsNumber = (
   options?: IsNumberOptions,
-  validationOptions?: ValidationOptions,
+  validationOptions?: ValidationOptions
 ): PropertyDecorator =>
   _IsNumber(options, { ...validationOptions, message: 'Phải là Boolean' });
+
+export const IsEnum = (
+  entity: object,
+  validationOptions?: ValidationOptions
+): PropertyDecorator =>
+  _IsEnum(entity, { ...validationOptions, message: 'Không đúng định dạng' });
