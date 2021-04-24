@@ -10,15 +10,20 @@ export class PhotoService {
   private readonly BUCKET_NAME = process.env.S3_BUCKET;
   private readonly S3: AWS.S3;
   private readonly DEFAULT_PHOTOS = ['default-avatar', 'default-brand'];
+
   constructor(private readonly hashService: HashService) {
     this.S3 = new AWS.S3({
       accessKeyId: this.ID,
-      secretAccessKey: this.SECRET,
+      secretAccessKey: this.SECRET
     });
   }
 
-  save(file: File): Promise<string> {
+  create(file: File): Promise<string> {
     const id = this.hashService.rand();
+    return this.upload(file, id);
+  }
+
+  upload(file: File, id: string): Promise<string> {
     const params: AWS.S3.PutObjectRequest = {
       Bucket: this.BUCKET_NAME,
       Key: id,
@@ -37,7 +42,7 @@ export class PhotoService {
   remove(id: string): Promise<boolean> {
     const params = {
       Bucket: this.BUCKET_NAME,
-      Key: id,
+      Key: id
     };
     return new Promise((resolve) => {
       if (this.DEFAULT_PHOTOS.some((p) => p === id)) resolve(false);

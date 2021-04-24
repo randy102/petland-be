@@ -4,17 +4,16 @@ import {
   UseInterceptors,
   UploadedFile,
   Delete,
-  Body,
   UseGuards,
   Param,
-  HttpStatus,
+  HttpStatus, Put
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { PhotoService } from './photo.service';
 import { File } from './photo.type';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { PhotoUploadDto } from './photo.dto';
+import { PhotoUpdateDto, PhotoUploadDto } from './photo.dto';
 
 
 
@@ -29,7 +28,14 @@ export class PhotoController {
   @UseInterceptors(FileInterceptor('file'))
   @ApiBody({ type: PhotoUploadDto })
   uploadPhoto(@UploadedFile() file: File): Promise<string> {
-    return this.photoService.save(file);
+    return this.photoService.create(file);
+  }
+
+  @Put(':id')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiBody({ type: PhotoUpdateDto })
+  updatePhoto(@Param('id') id: string, @UploadedFile() file: File): Promise<string> {
+    return this.photoService.upload(file, id);
   }
 
   @Delete(':id')
