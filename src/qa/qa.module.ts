@@ -1,6 +1,7 @@
 import { forwardRef, Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { CommentModule } from "src/comment/comment.module";
+import { NotificationModule } from "src/notification/notification.module";
 import { PostService } from "src/post/post.service";
 import { UserModule } from "src/user/user.module";
 import { PostModule } from "../post/post.module";
@@ -15,6 +16,7 @@ import { QaService } from "./qa.service";
     TypeOrmModule.forFeature([QaEntity]),
     PostModule,
     forwardRef(() => CommentModule),
+    forwardRef(() => NotificationModule),
     UserModule
   ],
   exports: [QaService]

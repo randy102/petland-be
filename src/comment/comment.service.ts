@@ -1,5 +1,6 @@
 import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import BaseService from "src/base/base.service";
+import { NotificationService } from "src/notification/notification.service";
 import { QaService } from "src/qa/qa.service";
 import { joinMany2One, match } from "src/utils/mongo/aggregate-tools";
 import { CommentResponseDTO, CreateCommentDTO, DeleteCommentDTO, EditCommentDTO } from "./comment.dto";
@@ -10,12 +11,16 @@ import CommentEntity from "./comment.entity";
 export class CommentService extends BaseService<CommentEntity>{
     constructor( 
         @Inject(forwardRef(() => QaService))
-        private readonly qaService: QaService) {
+        private readonly qaService: QaService,
+        @Inject(forwardRef(() => NotificationService))
+        private readonly notificationService: NotificationService,
+        ) {
           super(CommentEntity, 'Bình luận');
     }
 
     async createComment(data: CreateCommentDTO, createdBy: string): Promise<CommentEntity>{
         await this.qaService.checkExisted({_id: data.qaID});
+        await this.notificationService.createNotificationComment(data.qaID);
         return this.save({
             ...data,
             createdBy

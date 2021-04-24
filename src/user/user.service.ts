@@ -20,7 +20,7 @@ export class UserService extends BaseService<UserEntity> {
   }
 
   async changeRole(data: ChangeUserRoleDTO, updatedBy: string): Promise<UserEntity> {
-    const user = await this.checkExisted({ _id: data.id });
+    const user = await this.checkExistedId(data.id);
     const removeAdmin = user.role === UserRole.ADMIN && data.role !== UserRole.ADMIN;
     if (removeAdmin) {
       await this.ensureHasAdmin();
@@ -36,10 +36,10 @@ export class UserService extends BaseService<UserEntity> {
   }
 
   async changePassWord(data: ChangePasswordDTO, updatedBy: string): Promise<UserEntity> {
-    const user = await this.checkExisted({ _id: updatedBy });
-    const checkDuplication = data.newPassword === data.oldPassword;
-    if (checkDuplication) {
-      throw new DuplicateError('Mật khẩu');
+    const user = await this.checkExistedId(updatedBy);
+    const pwd = this.hashService.create(data.oldPassword);
+    if(pwd != user.password){
+      throw new HttpException("Mật khẩu cũ bị sai", HttpStatus.NOT_FOUND);
     }
     return this.save({
       ...user,
@@ -49,7 +49,7 @@ export class UserService extends BaseService<UserEntity> {
   }
 
   async changeInfo(data: UpdateProfileDTO, updatedBy: string): Promise<UserEntity> {
-    const user = await this.checkExisted({ _id: updatedBy });
+    const user = await this.checkExistedId(updatedBy);
     return this.save({
       ...user,
       ...data,
@@ -58,7 +58,7 @@ export class UserService extends BaseService<UserEntity> {
   }
 
   async lockUser(data: LockUserDTO, updatedBy: string): Promise<UserEntity> {
-    const user = await this.checkExisted({ _id: data.id });
+    const user = await this.checkExistedId(data.id);
     return this.save({
       ...user,
       isActive: data.isActive,

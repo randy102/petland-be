@@ -1,6 +1,7 @@
 import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import BaseService from "src/base/base.service";
 import { CommentService } from "src/comment/comment.service";
+import { NotificationService } from "src/notification/notification.service";
 import { joinMany2One, match, set } from "src/utils/mongo/aggregate-tools";
 import { PostService } from "../post/post.service";
 import { CreateQaDTO, DeleteQaDto, EditQaDTO, QaResponseDTO } from "./qa.dto";
@@ -13,12 +14,15 @@ export class QaService extends BaseService<QaEntity>{
       private readonly postService: PostService,
       @Inject(forwardRef(() => CommentService))
       private readonly commentService: CommentService,
+      @Inject(forwardRef(() => NotificationService))
+        private readonly notificationService: NotificationService,
       ) {
         super(QaEntity, 'Câu hỏi');
       }
 
     async createQa(data: CreateQaDTO, createdBy: string): Promise<QaEntity>{
         await this.postService.checkExisted({_id: data.postID});
+        await this.notificationService.createNotificationQa(data.postID);
         return this.save({
             ...data,
             createdBy

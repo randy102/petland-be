@@ -22,6 +22,7 @@ import { PackModule } from './pack/pack.module';
 import { ReportModule } from './report/report.module';
 import { ChargeRequestModule } from './charge-request/charge-request.module';
 import { PointTransactionModule } from './point-transaction/point-transaction.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { PointTransactionModule } from './point-transaction/point-transaction.mo
     ReportModule,
     ChargeRequestModule,
     PointTransactionModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
