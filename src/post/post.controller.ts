@@ -25,6 +25,18 @@ export class PostController {
     return this.postService.getByUser(user._id);
   }
 
+
+
+  @Get('public/highlight')
+  @Public()
+  @ApiResponse({
+    type: [PostResponseDTO],
+    description: 'Get all highlight posts'
+  })
+  getHighlightPost(): Promise<PostResponseDTO[]>{
+    return this.postService.getHighlight();
+  }
+
   @Get('public')
   @Public()
   @ApiResponse({

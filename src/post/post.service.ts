@@ -184,4 +184,12 @@ export class PostService extends BaseService<PostEntity> {
       ...PostService.baseAggregate()
     ]);
   }
+
+  getHighlight(): Promise<PostResponseDTO[]> {
+    return this.aggregate([
+      match({ state: PostStatus.PUBLISHED }),
+      ...PostService.baseAggregate(),
+      match({isHighlighted: true})
+    ]);
+  }
 }
