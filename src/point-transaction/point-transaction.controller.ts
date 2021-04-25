@@ -1,14 +1,16 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import PointTransactionEntity from './point-transaction.entity';
 import { User } from '../user/user.decorator';
 import UserEntity from '../user/user.entity';
 import { PointTransactionService } from './point-transaction.service';
 
-@Controller('point-transaction')
+@ApiTags("Point Transaction")
+@Controller('api/point-transaction')
 @UseGuards(JwtAuthGuard, RolesGuard)
+@ApiBearerAuth()
 export class PointTransactionController {
   constructor(private readonly pointTransactionService: PointTransactionService) {}
 

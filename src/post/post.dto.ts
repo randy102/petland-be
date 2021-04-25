@@ -84,6 +84,9 @@ export class PostResponseDTO extends PostEntity {
 
     @ApiProperty()
     createdName: string;
+
+    @ApiProperty()
+    isHighlighted: boolean
 }
 
 export class RejectPostDTO {

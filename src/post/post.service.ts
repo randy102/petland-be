@@ -3,11 +3,12 @@ import BaseService from '../base/base.service';
 import PostEntity, { PostStatus } from './post.entity';
 import { CreatePostDTO, PostResponseDTO, RejectPostDTO, UpdatePostDTO } from './post.dto';
 import { CategoryService } from '../category/category.service';
-import { join, joinMany2One, match, set, unwind } from '../utils/mongo/aggregate-tools';
+import { and, condIf, fieldExists, gte, join, joinMany2One, match, or, set, unwind } from '../utils/mongo/aggregate-tools';
 import { NoPermissionError } from '../commons/auth.exception';
 import { CityService } from '../city/city.service';
 import { DistrictService } from '../district/district.service';
 import { SubCategoryService } from '../sub-category/sub-category.service';
+import { Moment } from '../utils/moment';
 
 @Injectable()
 export class PostService extends BaseService<PostEntity> {
@@ -27,7 +28,15 @@ export class PostService extends BaseService<PostEntity> {
       ...joinMany2One('SubCategory', 'subCategoryID', '_id', 'subCategory', 'name'),
       ...joinMany2One('User', 'createdBy', '_id', 'createdName', 'name'),
       ...joinMany2One('District', 'districtID', '_id', 'district', 'name'),
-      ...joinMany2One('City', 'cityID', '_id', 'city', 'name')
+      ...joinMany2One('City', 'cityID', '_id', 'city', 'name'),
+      set({
+        isHighlighted: condIf(
+          and(
+            fieldExists('highlightExpired'),
+            gte('$highlightExpired', Moment().valueOf())
+          ),
+          true, false)
+      })
     ];
   }
 

@@ -93,6 +93,11 @@ export default class PostEntity extends BaseEntity<PostEntity>{
     @Expose()
     rejectedReason: string
 
+    @ApiProperty()
+    @Column()
+    @Expose()
+    highlightExpired: number
+
     constructor(post: Partial<PostEntity>){
         super(post, PostEntity);
     }

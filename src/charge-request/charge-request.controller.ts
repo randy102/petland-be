@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import ChargeRequestEntity from './charge-request.entity';
 import { ChargeRequestResponseDTO, ConfirmChargeRequestDTO, CreateChargeRequestDTO, RejectChargeRequestDTO } from './charge-request.dto';
 import { ChargeRequestService } from './charge-request.service';
@@ -8,7 +8,9 @@ import { User } from '../user/user.decorator';
 import UserEntity, { UserRole } from '../user/user.entity';
 import { Roles, RolesGuard } from '../auth/roles.guard';
 
-@Controller('charge-request')
+@ApiTags('Charge Request')
+@Controller('api/charge-request')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class ChargeRequestController {
   constructor(private readonly chargeRequestService: ChargeRequestService) {}

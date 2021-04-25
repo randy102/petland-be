@@ -3,7 +3,7 @@ import { ChargeRequestResponseDTO, ConfirmChargeRequestDTO, CreateChargeRequestD
 import BaseService from '../base/base.service';
 import ChargeRequestEntity, { ChargeRequestState } from './charge-request.entity';
 import { joinMany2One, match } from '../utils/mongo/aggregate-tools';
-import shortid from 'shortid';
+import shortid = require('shortid');
 import { PointTransactionService } from '../point-transaction/point-transaction.service';
 
 @Injectable()

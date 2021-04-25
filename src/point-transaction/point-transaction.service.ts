@@ -14,7 +14,7 @@ export class PointTransactionService extends BaseService<PointTransactionEntity>
   }
 
   getUser(userID: string): Promise<PointTransactionEntity[]> {
-    return Promise.resolve([]);
+    return this.find({userID});
   }
 
   charge(userID: string, amount: number, requestCode: string): Promise<PointTransactionEntity>{
