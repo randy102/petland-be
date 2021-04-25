@@ -20,9 +20,9 @@ export class NotificationController {
         return this.notificationService.listNotification(id);
     }
 
-    @Put()
+    @Put('read')
     @ApiResponse({type: NotificationEntity, status: HttpStatus.OK})
-    markReadNotification(@Query('id') id: string, @User() user: UserEntity): Promise<NotificationEntity>{
-        return this.notificationService.markReadNotification(id, user._id);
+    markReadNotification(@Body('ids') ids: string[], @User() user: UserEntity): Promise<NotificationEntity>{
+        return this.notificationService.markReadNotification(ids, user._id);
     }
 }

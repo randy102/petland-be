@@ -19,4 +19,10 @@ export class PointTransactionController {
   getUserTransaction(@User() user: UserEntity): Promise<PointTransactionEntity[]>{
     return this.pointTransactionService.getUser(user._id);
   }
+
+  @Get()
+  @ApiResponse({type: [PointTransactionEntity], description: 'Admin can see all point transaction history'})
+  getAllTransaction(@User() user: UserEntity): Promise<PointTransactionEntity[]>{
+    return this.pointTransactionService.find();
+  }
 }
