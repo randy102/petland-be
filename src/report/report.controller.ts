@@ -25,7 +25,7 @@ export class ReportController {
     return this.reportService.create(body);
   }
 
-  @Put()
+  @Put('resolve')
   @ApiResponse({type: [ReportEntity], description: "Admin can mark resolve report"})
   resolveReport(@Body() body: ResolveReportDTO): Promise<ReportEntity[]>{
     return this.reportService.resolve(body);
