@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString } from '../commons/custom-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import UserEntity, { UserRole } from './user.entity';
-import { IsArray } from 'class-validator';
+import { IsArray, IsMobilePhone } from 'class-validator';
 
 export class ChangeUserRoleDTO {
   @ApiProperty()
@@ -22,8 +22,8 @@ export class UpdateProfileDTO {
   name: string;
 
   @ApiProperty()
-  @IsString()
   @IsNotEmpty()
+  @IsMobilePhone()
   phone: string;
 
   @ApiProperty()
