@@ -17,7 +17,7 @@ export class AdsService extends BaseService<AdsEntity>{
         let id: string = null;
 
         if(file){
-            id = await this.photoService.create(file);
+            [id] = await this.photoService.create([file]);
         }
         return this.save({
             ...data,
@@ -38,7 +38,7 @@ export class AdsService extends BaseService<AdsEntity>{
             await this.checkExisted({fileID: data.fileID});
             if(file){
                 await this.photoService.remove(data.fileID);
-                id = await this.photoService.create(file);
+                [id] = await this.photoService.create([file]);
             } 
             else{
                 id = data.fileID;
@@ -46,7 +46,7 @@ export class AdsService extends BaseService<AdsEntity>{
         }
         else{
             if(file){
-                id = await this.photoService.create(file);
+                [id] = await this.photoService.create([file]);
             }
         }
        

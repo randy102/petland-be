@@ -3,7 +3,7 @@ import { IsString } from '../commons/custom-validator';
 
 export class PhotoUploadDto {
   @ApiProperty({ type: 'string', format: 'binary' })
-  file: any;
+  files: any;
 }
 
 export class PhotoUpdateDto {
