@@ -18,21 +18,18 @@ export class NotificationService extends BaseService<NotificationEntity> {
   }
 
   async listNotification(id: string): Promise<NotificationEntity[]> {
-    await this.userService.checkExistedId(id);
-    return this.find({ userID: id, read: false });
+    const notifications = await this.find({ userID: id, read: false });
+    const notReadIds = notifications.filter(n => !n.read).map(n => n._id);
+    // this.markReadNotification(notReadIds);
+    return notifications;
   }
 
-  async markReadNotification(ids: string[], updatedBy: string): Promise<NotificationEntity> {
-    await this.userService.checkExistedId(updatedBy);
+  async markReadNotification(ids: string[]): Promise<void> {
     const notifications = await this.checkExistedIds(ids);
     for (const notification of notifications) {
-      if (updatedBy != notification.userID) {
-        throw new HttpException('Chỉ người được thông báo mới được quyền đánh đánh dấu đã đọc', HttpStatus.BAD_REQUEST);
-      }
-      return this.save({
+      await this.save({
         ...notification,
-        read: true,
-        updatedBy
+        read: true
       });
     }
   }
