@@ -7,7 +7,7 @@ import UserEntity, { UserRole } from 'src/user/user.entity';
 import NotificationEntity from './notification.entity';
 import { NotificationService } from './notification.service';
 
-@Controller('notification')
+@Controller('api/notification')
 @ApiTags('Notification')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
