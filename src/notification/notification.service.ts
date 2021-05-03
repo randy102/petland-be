@@ -22,10 +22,7 @@ export class NotificationService extends BaseService<NotificationEntity> {
   }
 
   async listNotification(id: string): Promise<NotificationEntity[]> {
-    const notifications = await this.find({ userID: id, read: false });
-    const notReadIds = notifications.filter(n => !n.read).map(n => n._id);
-    // this.markReadNotification(notReadIds);
-    return notifications;
+    return this.find({ userID: id });
   }
 
   async markReadNotification(ids: string[]): Promise<void> {
@@ -63,15 +60,15 @@ export class NotificationService extends BaseService<NotificationEntity> {
   }
 
 
-  async createNotificationPost(post: PostEntity): Promise<NotificationEntity>{
-    const stateInfo = post.state === 'PUBLISHED' ? 'được công khai' : 'bị từ chối'
+  async createNotificationPost(post: PostEntity): Promise<NotificationEntity> {
+    const stateInfo = post.state === 'PUBLISHED' ? 'được công khai' : 'bị từ chối';
     return this.save({
       userID: post.createdBy,
       message: `Bài viết "${post.name}" đã ${stateInfo}`,
       isPostVerify: true,
       postID: post._id,
       read: false
-    })
+    });
   }
 
 }
