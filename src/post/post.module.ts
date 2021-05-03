@@ -17,7 +17,7 @@ import { NotificationModule } from '../notification/notification.module';
     forwardRef(() =>CategoryModule),
     CityModule,
     DistrictModule,
-    NotificationModule,
+    forwardRef(() => NotificationModule),
     forwardRef(() => SubCategoryModule),
   ],
   exports: [PostService]

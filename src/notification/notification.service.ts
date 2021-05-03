@@ -13,6 +13,7 @@ import PostEntity from '../post/post.entity';
 export class NotificationService extends BaseService<NotificationEntity> {
   constructor(
     private readonly userService: UserService,
+    @Inject(forwardRef(() => PostService))
     private readonly postService: PostService,
     @Inject(forwardRef(() => QaService))
     private readonly qaService: QaService

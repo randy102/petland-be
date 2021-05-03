@@ -14,7 +14,7 @@ import { QaService } from "./qa.service";
   providers: [QaService],
   imports: [
     TypeOrmModule.forFeature([QaEntity]),
-    PostModule,
+    forwardRef(() => PostModule),
     forwardRef(() => CommentModule),
     forwardRef(() => NotificationModule),
     UserModule
