@@ -48,6 +48,7 @@ export class PostController {
   }
 
   @Get(':id')
+  @Public()
   @ApiResponse({
     type: PostResponseDTO,
     description: 'Post detail'
