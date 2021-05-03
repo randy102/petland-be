@@ -29,6 +29,11 @@ export default class NotificationEntity extends BaseEntity<NotificationEntity> {
   @Column()
   @Expose()
   qaID: string;
+
+  @ApiProperty()
+  @Column()
+  @Expose()
+  isPostVerify: boolean
   
   constructor(notification: Partial<NotificationEntity>) {
     super(notification, NotificationEntity);

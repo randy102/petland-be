@@ -20,11 +20,12 @@ export class CommentService extends BaseService<CommentEntity>{
 
     async createComment(data: CreateCommentDTO, createdBy: string): Promise<CommentEntity>{
         await this.qaService.checkExisted({_id: data.qaID});
-        await this.notificationService.createNotificationComment(data.qaID);
-        return this.save({
+        const comment = await this.save({
             ...data,
             createdBy
         })
+        this.notificationService.createNotificationComment(comment);
+        return comment
     }
 
     async comments(id: string): Promise<CommentResponseDTO[]>{

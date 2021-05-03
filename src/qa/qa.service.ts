@@ -22,11 +22,12 @@ export class QaService extends BaseService<QaEntity>{
 
     async createQa(data: CreateQaDTO, createdBy: string): Promise<QaEntity>{
         await this.postService.checkExisted({_id: data.postID});
-        await this.notificationService.createNotificationQa(data.postID);
-        return this.save({
+        const qa = await this.save({
             ...data,
             createdBy
         })
+        this.notificationService.createNotificationQa(qa);
+        return qa
     }
 
     async qaList(id: string): Promise<QaResponseDTO[]>{
