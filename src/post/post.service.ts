@@ -9,6 +9,7 @@ import { CityService } from '../city/city.service';
 import { DistrictService } from '../district/district.service';
 import { SubCategoryService } from '../sub-category/sub-category.service';
 import { Moment } from '../utils/moment';
+import { NotificationService } from '../notification/notification.service';
 
 @Injectable()
 export class PostService extends BaseService<PostEntity> {
@@ -16,6 +17,7 @@ export class PostService extends BaseService<PostEntity> {
     private readonly categoryService: CategoryService,
     private readonly cityService: CityService,
     private readonly districtService: DistrictService,
+    private readonly notificationService: NotificationService,
     @Inject(forwardRef(() => SubCategoryService))
     private readonly subCategoryService: SubCategoryService
   ) {
@@ -142,11 +144,16 @@ export class PostService extends BaseService<PostEntity> {
     if (existed.state != PostStatus.PENDING) {
       throw new HttpException('Only verify post in pending state!', HttpStatus.BAD_REQUEST);
     }
-    return this.save({
+
+    const post = await this.save({
       ...existed,
       state: PostStatus.PUBLISHED,
       updatedBy
     });
+
+    this.notificationService.createNotificationPost(post);
+
+    return post;
   }
 
   async rejectPost(id: string, body: RejectPostDTO, updatedBy: string): Promise<PostEntity> {
@@ -156,12 +163,16 @@ export class PostService extends BaseService<PostEntity> {
       throw new HttpException('Only reject post in pending state!', HttpStatus.BAD_REQUEST);
     }
 
-    return this.save({
+    const post = await this.save({
       ...existed,
       state: PostStatus.REJECTED,
       rejectedReason: body.reason,
       updatedBy
     });
+
+    this.notificationService.createNotificationPost(post);
+
+    return post;
   }
 
   async getDetail(id: string): Promise<PostResponseDTO> {
@@ -189,7 +200,7 @@ export class PostService extends BaseService<PostEntity> {
     return this.aggregate([
       match({ state: PostStatus.PUBLISHED }),
       ...PostService.baseAggregate(),
-      match({isHighlighted: true})
+      match({ isHighlighted: true })
     ]);
   }
 }

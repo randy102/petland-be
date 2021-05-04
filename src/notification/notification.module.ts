@@ -14,7 +14,7 @@ import { NotificationService } from './notification.service';
   imports: [
     TypeOrmModule.forFeature([NotificationEntity]),
     UserModule,
-    PostModule,
+    forwardRef(() => PostModule),
     forwardRef(() =>  QaModule),
     forwardRef(() => CommentModule),
   ],

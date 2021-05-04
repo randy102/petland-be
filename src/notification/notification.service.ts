@@ -5,11 +5,15 @@ import { PostService } from 'src/post/post.service';
 import { QaService } from 'src/qa/qa.service';
 import { UserService } from 'src/user/user.service';
 import NotificationEntity from './notification.entity';
+import QaEntity from '../qa/qa.entity';
+import CommentEntity from '../comment/comment.entity';
+import PostEntity from '../post/post.entity';
 
 @Injectable()
 export class NotificationService extends BaseService<NotificationEntity> {
   constructor(
     private readonly userService: UserService,
+    @Inject(forwardRef(() => PostService))
     private readonly postService: PostService,
     @Inject(forwardRef(() => QaService))
     private readonly qaService: QaService
@@ -18,42 +22,50 @@ export class NotificationService extends BaseService<NotificationEntity> {
   }
 
   async listNotification(id: string): Promise<NotificationEntity[]> {
-    await this.userService.checkExistedId(id);
-    return this.find({ userID: id, read: false });
+    return this.find({ userID: id });
   }
 
-  async markReadNotification(ids: string[], updatedBy: string): Promise<NotificationEntity> {
-    await this.userService.checkExistedId(updatedBy);
+  async markReadNotification(ids: string[]): Promise<void> {
     const notifications = await this.checkExistedIds(ids);
     for (const notification of notifications) {
-      if (updatedBy != notification.userID) {
-        throw new HttpException('Chỉ người được thông báo mới được quyền đánh đánh dấu đã đọc', HttpStatus.BAD_REQUEST);
-      }
-      return this.save({
+      await this.save({
         ...notification,
-        read: true,
-        updatedBy
+        read: true
       });
     }
   }
 
-  async createNotificationQa(postID: string): Promise<NotificationEntity> {
-    const post = await this.postService.checkExistedId(postID);
+  async createNotificationQa(qa: QaEntity): Promise<NotificationEntity> {
+    const post = await this.postService.checkExistedId(qa.postID);
+    const user = await this.userService.checkExistedId(qa.createdBy);
     return this.save({
       userID: post.createdBy,
-      message: 'Bài viết của bạn có câu hỏi mới',
+      message: `${user.name} đã tạo câu hỏi dưới bài viết "${post.name}"`,
       postID: post._id,
       read: false
     });
   }
 
-  async createNotificationComment(qaID: string): Promise<NotificationEntity> {
-    const qa = await this.qaService.checkExistedId(qaID);
+  async createNotificationComment(comment: CommentEntity): Promise<NotificationEntity> {
+    const qa = await this.qaService.checkExistedId(comment.qaID);
     const post = await this.postService.checkExistedId(qa.postID);
+    const user = await this.userService.checkExistedId(comment.createdBy);
     return this.save({
       userID: qa.createdBy,
-      message: 'Câu hỏi của bạn có bình luận mới',
+      message: `${user.name} vừa bình luận dưới câu hỏi của bạn`,
       qaID: qa._id,
+      postID: post._id,
+      read: false
+    });
+  }
+
+
+  async createNotificationPost(post: PostEntity): Promise<NotificationEntity> {
+    const stateInfo = post.state === 'PUBLISHED' ? 'được công khai' : 'bị từ chối';
+    return this.save({
+      userID: post.createdBy,
+      message: `Bài viết "${post.name}" đã ${stateInfo}`,
+      isPostVerify: true,
       postID: post._id,
       read: false
     });

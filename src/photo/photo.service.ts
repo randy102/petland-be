@@ -18,9 +18,14 @@ export class PhotoService {
     });
   }
 
-  create(file: File): Promise<string> {
-    const id = this.hashService.rand();
-    return this.upload(file, id);
+  async create(files: File[]): Promise<string[]> {
+    const ids: string[] = []
+    for (const file of files){
+      const id = this.hashService.rand();
+      await this.upload(file, id);
+      ids.push(id)
+    }
+    return ids
   }
 
   upload(file: File, id: string): Promise<string> {

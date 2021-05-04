@@ -7,6 +7,7 @@ import PostEntity from './post.entity';
 import { CityModule } from '../city/city.module';
 import { DistrictModule } from '../district/district.module';
 import { SubCategoryModule } from '../sub-category/sub-category.module';
+import { NotificationModule } from '../notification/notification.module';
 
 @Module({
   controllers: [PostController],
@@ -16,6 +17,7 @@ import { SubCategoryModule } from '../sub-category/sub-category.module';
     forwardRef(() =>CategoryModule),
     CityModule,
     DistrictModule,
+    forwardRef(() => NotificationModule),
     forwardRef(() => SubCategoryModule),
   ],
   exports: [PostService]

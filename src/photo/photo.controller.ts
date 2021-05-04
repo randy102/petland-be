@@ -6,9 +6,9 @@ import {
   Delete,
   UseGuards,
   Param,
-  HttpStatus, Put
+  HttpStatus, Put, UploadedFiles, Body
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { PhotoService } from './photo.service';
 import { File } from './photo.type';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -25,10 +25,10 @@ export class PhotoController {
   constructor(private readonly photoService: PhotoService) {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FilesInterceptor('files'))
   @ApiBody({ type: PhotoUploadDto })
-  uploadPhoto(@UploadedFile() file: File): Promise<string> {
-    return this.photoService.create(file);
+  uploadPhoto(@UploadedFiles() files: File[]): Promise<string[]> {
+    return this.photoService.create(files);
   }
 
   @Put(':id')
@@ -38,9 +38,12 @@ export class PhotoController {
     return this.photoService.upload(file, id);
   }
 
-  @Delete(':id')
+  @Delete()
   @ApiResponse({type: Boolean, status: HttpStatus.OK})
-  deletePhoto(@Param('id') id: string): Promise<boolean> {
-    return this.photoService.remove(id);
+  async deletePhoto(@Body('ids') ids: string[]): Promise<boolean> {
+    for(const id of ids){
+      await this.photoService.remove(id)
+    }
+    return true
   }
 }
