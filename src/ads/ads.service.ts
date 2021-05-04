@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import BaseService from 'src/base/base.service';
 import { AdsDTO, DeleteAdsDTO, UpdateAdsDTO } from './ads.dto';
 import AdsEntity from './ads.entity';
-import { File } from './ads.type';
 import { PhotoService } from 'src/photo/photo.service';
 
 @Injectable()
@@ -13,15 +12,11 @@ export class AdsService extends BaseService<AdsEntity>{
           super(AdsEntity, 'Quảng cáo');
       }
 
-    async createAds(data: AdsDTO, file: File, createdBy: string): Promise<AdsEntity>{
-        let id: string = null;
+    async createAds(data: AdsDTO, createdBy: string): Promise<AdsEntity>{
+        await this.checkDuplication({fileID: data.fileID});
 
-        if(file){
-            id = await this.photoService.create(file);
-        }
         return this.save({
             ...data,
-            fileID: id,
             createdBy
         })
     }
@@ -30,32 +25,15 @@ export class AdsService extends BaseService<AdsEntity>{
         return await this.find({position: data});
     }
 
-    async updateAds(data: UpdateAdsDTO, file: File, updatedBy: string): Promise<AdsEntity>{
+    async updateAds(data: UpdateAdsDTO, updatedBy: string): Promise<AdsEntity>{
         const ads = await this.checkExistedId(data.id);
-        let id: string = null;
-
-        if(data.fileID){
-            await this.checkExisted({fileID: data.fileID});
-            if(file){
-                await this.photoService.remove(data.fileID);
-                id = await this.photoService.create(file);
-            } 
-            else{
-                id = data.fileID;
-            }
-        }
-        else{
-            if(file){
-                id = await this.photoService.create(file);
-            }
-        }
        
         return await this.save({
             ...ads,
             partner: data.partner,
             url: data.url,
             position: data.position,
-            fileID: id,
+            fileID: data.fileID,
             updatedBy
         })
     }
