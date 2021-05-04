@@ -48,5 +48,4 @@ export class AdsService extends BaseService<AdsEntity>{
         }
         return await this.delete(data.ids);
     }
-
 }
