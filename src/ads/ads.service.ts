@@ -26,8 +26,11 @@ export class AdsService extends BaseService<AdsEntity>{
         })
     }
 
-    async getAds(data: string): Promise<AdsEntity[]>{
-        return await this.find({position: data});
+    getAds(data: string): Promise<AdsEntity[]>{
+        if (data){
+            return this.find({position: data});
+        }
+        return this.find()
     }
 
     async updateAds(data: UpdateAdsDTO, file: File, updatedBy: string): Promise<AdsEntity>{
