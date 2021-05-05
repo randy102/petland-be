@@ -14,7 +14,7 @@ export class AdsDTO{
     partner: string;
 
     @ApiProperty({ format: 'binary' })
-    file: string;
+    fileID: string;
 
     @ApiProperty()
     @Column()
@@ -31,11 +31,6 @@ export class UpdateAdsDTO extends AdsDTO{
     @IsString()
     @IsNotEmpty()
     id: string;
-
-    @ApiProperty()
-    @Column()
-    @Expose()
-    fileID: string;
 }
 
 export class DeleteAdsDTO{
