@@ -1,13 +1,14 @@
 import { Moment } from '../moment';
 
-export function joinMany2One(target: string, localField: string, foreignField: string, as: string, displayField: string) {
-  const setOptions = {};
-  setOptions[as] = '$' + as + '.' + displayField;
-  return [
+export function joinMany2One(target: string, localField: string, foreignField: string, as: string, displayField?: string) {
+  let pipe = [
     join(target, localField, foreignField, as),
-    unwind('$' + as),
-    set(setOptions)
+    unwind('$' + as)
   ];
+  if (displayField) {
+    pipe.push(set({ [as]: '$' + as + '.' + displayField }));
+  }
+  return pipe;
 }
 
 export function join(target: string, localField: string, foreignField: string, as: string): object {
@@ -49,18 +50,18 @@ export function condIf(condition: object, truthy: any, falsy: any) {
   };
 }
 
-export function or(...expression: any[]){
-  return {$or: [...expression]}
+export function or(...expression: any[]) {
+  return { $or: [...expression] };
 }
 
-export function and(...expression: any[]){
-  return {$and: [...expression]}
+export function and(...expression: any[]) {
+  return { $and: [...expression] };
 }
 
-export function gte(left: any, right: any){
-  return {$gte: [left, right]}
+export function gte(left: any, right: any) {
+  return { $gte: [left, right] };
 }
 
-export function fieldExists(field: string){
-  return { $ifNull: [ '$'+field, false ] }
+export function fieldExists(field: string) {
+  return { $ifNull: ['$' + field, false] };
 }

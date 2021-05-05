@@ -2,6 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsNotEmpty, IsBoolean, IsNumber } from 'src/commons/custom-validator';
 import PostEntity, { PetSex } from './post.entity';
 import { IsArray, IsEnum } from 'class-validator';
+import UserEntity from '../user/user.entity';
 
 export class CreatePostDTO{
     @ApiProperty()
@@ -83,7 +84,7 @@ export class PostResponseDTO extends PostEntity {
     district: string;
 
     @ApiProperty()
-    createdName: string;
+    createdUser: UserEntity;
 
     @ApiProperty()
     isHighlighted: boolean

@@ -28,7 +28,7 @@ export class PostService extends BaseService<PostEntity> {
     return [
       ...joinMany2One('Category', 'categoryID', '_id', 'category', 'name'),
       ...joinMany2One('SubCategory', 'subCategoryID', '_id', 'subCategory', 'name'),
-      ...joinMany2One('User', 'createdBy', '_id', 'createdName', 'name'),
+      ...joinMany2One('User', 'createdBy', '_id', 'createdUser'),
       ...joinMany2One('District', 'districtID', '_id', 'district', 'name'),
       ...joinMany2One('City', 'cityID', '_id', 'city', 'name'),
       set({
