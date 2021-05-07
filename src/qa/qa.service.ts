@@ -2,7 +2,7 @@ import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from '@nest
 import BaseService from 'src/base/base.service';
 import { CommentService } from 'src/comment/comment.service';
 import { NotificationService } from 'src/notification/notification.service';
-import { joinMany2One, match, set } from 'src/utils/mongo/aggregate-tools';
+import { join, joinMany2One, match, set } from 'src/utils/mongo/aggregate-tools';
 import { PostService } from '../post/post.service';
 import { CreateQaDTO, DeleteQaDto, EditQaDTO, QaResponseDTO } from './qa.dto';
 import QaEntity from './qa.entity';
@@ -35,6 +35,7 @@ export class QaService extends BaseService<QaEntity> {
     await this.postService.checkExistedId(id);
     return await this.aggregate([
       match({ postID: id }),
+      join('Comment', '_id', 'qaID', 'comments'),
       ...joinMany2One('Post', 'postID', '_id', 'post', 'name'),
       ...joinMany2One('User', 'createdBy', '_id', 'createdName', 'name')
     ]);
