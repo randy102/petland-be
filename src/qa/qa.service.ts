@@ -32,7 +32,7 @@ export class QaService extends BaseService<QaEntity> {
   }
 
   async qaList(id: string): Promise<QaResponseDTO[]> {
-    await this.checkExisted({ postID: id });
+    await this.postService.checkExistedId(id);
     return await this.aggregate([
       match({ postID: id }),
       ...joinMany2One('Post', 'postID', '_id', 'post', 'name'),
