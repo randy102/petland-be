@@ -2,7 +2,7 @@ import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from '@nest
 import BaseService from 'src/base/base.service';
 import { CommentService } from 'src/comment/comment.service';
 import { NotificationService } from 'src/notification/notification.service';
-import { join, joinMany2One, match, set } from 'src/utils/mongo/aggregate-tools';
+import { join, joinMany2One, match, set, unwind } from 'src/utils/mongo/aggregate-tools';
 import { PostService } from '../post/post.service';
 import { CreateQaDTO, DeleteQaDto, EditQaDTO, QaResponseDTO } from './qa.dto';
 import QaEntity from './qa.entity';
@@ -34,10 +34,22 @@ export class QaService extends BaseService<QaEntity> {
   async qaList(id: string): Promise<QaResponseDTO[]> {
     await this.postService.checkExistedId(id);
     return await this.aggregate([
-      match({ postID: id }),
+      // match({ postID: id }),
       join('Comment', '_id', 'qaID', 'comments'),
       ...joinMany2One('Post', 'postID', '_id', 'post', 'name'),
-      ...joinMany2One('User', 'createdBy', '_id', 'createdName', 'name')
+      ...joinMany2One('User', 'createdBy', '_id', 'createdName', 'name'),
+      unwind('$comments'),
+      ...joinMany2One('User', 'createdBy', '_id', 'comments.createdName', 'name'),
+      {
+        $group: {
+          '_id': '$_id',
+          'detail': { '$first': '$detail' },
+          'createdName': { '$first': '$createdName' },
+          'comments': {
+            '$push': '$comments'
+          }
+        }
+      }
     ]);
   }
 
