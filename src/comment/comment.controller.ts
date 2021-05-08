@@ -4,7 +4,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { User } from 'src/user/user.decorator';
 import UserEntity from 'src/user/user.entity';
-import { CommentResponseDTO, CreateCommentDTO, DeleteCommentDTO, EditCommentDTO, ResponseCreateCommentDTO } from './comment.dto';
+import { CommentResponseDTO, CreateCommentDTO, DeleteCommentDTO, EditCommentDTO } from './comment.dto';
 import CommentEntity from './comment.entity';
 import { CommentService } from './comment.service';
 
@@ -16,8 +16,8 @@ export class CommentController {
     constructor(private readonly commentService: CommentService){}
 
     @Post()
-    @ApiResponse({ type: ResponseCreateCommentDTO, status: HttpStatus.OK})
-    createComment(@Body() body: CreateCommentDTO, @User() user: UserEntity): Promise<ResponseCreateCommentDTO>{
+    @ApiResponse({ type: CommentEntity, status: HttpStatus.OK})
+    createComment(@Body() body: CreateCommentDTO, @User() user: UserEntity): Promise<CommentEntity>{
         return this.commentService.createComment(body, user._id);
     }
 
