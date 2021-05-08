@@ -45,6 +45,7 @@ export class QaService extends BaseService<QaEntity> {
           '_id': '$_id',
           'detail': { '$first': '$detail' },
           'createdName': { '$first': '$createdName' },
+          'createdAt': { '$first': '$createdAt' },
           'comments': {
             '$push': '$comments'
           }
