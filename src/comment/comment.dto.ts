@@ -7,6 +7,13 @@ import CommentEntity from "./comment.entity";
 
 export class CreateCommentDTO extends CommentEntity{}
 
+export class ResponseCreateCommentDTO extends CreateCommentDTO{
+    @ApiProperty()
+    @Column()
+    @Expose()
+    createdBy: string;
+}
+
 export class EditCommentDTO{
     @ApiProperty()
     @Column()
