@@ -74,6 +74,10 @@ export class DealService extends BaseService<DealEntity> {
     const deal = await this.checkExistedId(id)
     const post = await this.postService.checkExistedId(deal.postID)
     await this.postService.checkPostOwner(post, userID)
+    await this.postService.save({
+      ...post,
+      auctionExpired: Moment().valueOf()
+    })
     return  this.save({
       ...deal,
       isAccepted: true
