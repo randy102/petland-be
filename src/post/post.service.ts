@@ -31,6 +31,7 @@ export class PostService extends BaseService<PostEntity> {
       ...joinMany2One('User', 'createdBy', '_id', 'createdUser'),
       ...joinMany2One('District', 'districtID', '_id', 'district', 'name'),
       ...joinMany2One('City', 'cityID', '_id', 'city', 'name'),
+      join('Deal','_id','postID','deals'),
       set({
         isHighlighted: condIf(
           and(
