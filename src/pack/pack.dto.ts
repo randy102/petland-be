@@ -1,7 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { int } from "aws-sdk/clients/datapipeline";
 import { IsInt, IsNotEmpty, IsString } from "class-validator";
-import { Column } from "typeorm";
 
 export class PackDTO{
     @ApiProperty()
@@ -12,12 +10,12 @@ export class PackDTO{
     @ApiProperty()
     @IsInt()
     @IsNotEmpty()
-    dayNumber: int;
+    dayNumber: number;
 
     @ApiProperty()
     @IsInt()
     @IsNotEmpty()
-    price: int;
+    price: number;
 }
 
 export class UpdatePackDTO extends PackDTO{
