@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, IsBoolean, IsNumber } from 'src/commons/custom-validator';
 import PostEntity, { PetSex } from './post.entity';
-import { IsArray, IsEnum } from 'class-validator';
+import { IsArray, IsEmpty, IsEnum } from 'class-validator';
 import UserEntity from '../user/user.entity';
 import DealEntity from '../deal/deal.entity';
 
@@ -65,8 +65,7 @@ export class CreatePostDTO {
   images: string[];
 
   @ApiProperty()
-  @IsNumber()
-  auctionExpired: number
+  auctionExpired?: number
 }
 
 export class UpdatePostDTO extends CreatePostDTO {
