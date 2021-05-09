@@ -63,6 +63,10 @@ export class CreatePostDTO {
   @IsArray()
   @IsString({ each: true })
   images: string[];
+
+  @ApiProperty()
+  @IsNumber()
+  auctionExpired: number
 }
 
 export class UpdatePostDTO extends CreatePostDTO {
