@@ -5,10 +5,11 @@ import { CreateDealDTO, DealResponseDTO, UpdateDealDTO } from './deal.dto';
 import { and, condIf, fieldExists, gte, joinMany2One, match, set } from '../utils/mongo/aggregate-tools';
 import { Moment } from '../utils/moment';
 import { IdArrayDTO } from '../base/base.dto';
+import { PostService } from '../post/post.service';
 
 @Injectable()
 export class DealService extends BaseService<DealEntity> {
-  constructor() {
+  constructor(private readonly postService: PostService) {
     super(DealEntity, 'Thỏa thuận giá');
   }
 
@@ -67,5 +68,15 @@ export class DealService extends BaseService<DealEntity> {
       }
     }
     return this.delete(body.ids);
+  }
+
+  async accept(id: string, userID: string) : Promise<DealEntity>{
+    const deal = await this.checkExistedId(id)
+    const post = await this.postService.checkExistedId(deal.postID)
+    await this.postService.checkPostOwner(post, userID)
+    return  this.save({
+      ...deal,
+      isAccepted: true
+    })
   }
 }

@@ -42,6 +42,12 @@ export class DealController {
     return this.dealService.update(body, user._id)
   }
 
+  @Put('accept/:id')
+  @ApiResponse({type: DealEntity})
+  acceptDeal(@Param('id') id: string, @User() user: UserEntity): Promise<DealEntity>{
+    return this.dealService.accept(id, user._id)
+  }
+
   @Delete()
   @ApiResponse({type: Boolean})
   deleteDeal(@Body() body: IdArrayDTO, @User() user: UserEntity): Promise<boolean>{
