@@ -34,12 +34,12 @@ export class QaService extends BaseService<QaEntity> {
   async qaList(id: string): Promise<QaResponseDTO[]> {
     await this.postService.checkExistedId(id);
     return await this.aggregate([
-      // match({ postID: id }),
+      match({ postID: id }),
       join('Comment', '_id', 'qaID', 'comments'),
       ...joinMany2One('Post', 'postID', '_id', 'post', 'name'),
       ...joinMany2One('User', 'createdBy', '_id', 'createdName', 'name'),
       unwind('$comments'),
-      ...joinMany2One('User', 'createdBy', '_id', 'comments.createdName', 'name'),
+      ...joinMany2One('User', 'comments.createdBy', '_id', 'comments.createdName', 'name'),
       {
         $group: {
           '_id': '$_id',
@@ -47,7 +47,13 @@ export class QaService extends BaseService<QaEntity> {
           'createdName': { '$first': '$createdName' },
           'createdAt': { '$first': '$createdAt' },
           'comments': {
-            '$push': '$comments'
+            '$push': {
+              $cond: [
+                { $eq: ['$comments', {}] },
+                '$$REMOVE',
+                '$comments'
+              ]
+            }
           }
         }
       }
