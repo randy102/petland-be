@@ -62,6 +62,10 @@ export function gte(left: any, right: any) {
   return { $gte: [left, right] };
 }
 
+export function lte(left: any, right: any) {
+  return { $lte: [left, right] };
+}
+
 export function fieldExists(field: string) {
   return { $ifNull: ['$' + field, false] };
 }
