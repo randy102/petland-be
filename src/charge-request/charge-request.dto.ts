@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsMobilePhone, IsNumber, IsString } from '../commons/custom-validator';
 import ChargeRequestEntity from './charge-request.entity';
-import { IsArray } from 'class-validator';
 import { IdArrayDTO } from '../base/base.dto';
 
 export class CreateChargeRequestDTO{
