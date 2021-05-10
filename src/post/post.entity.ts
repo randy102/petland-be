@@ -98,6 +98,11 @@ export default class PostEntity extends BaseEntity<PostEntity>{
     @Expose()
     highlightExpired: number
 
+    @ApiProperty()
+    @Column()
+    @Expose()
+    auctionExpired:number
+
     constructor(post: Partial<PostEntity>){
         super(post, PostEntity);
     }

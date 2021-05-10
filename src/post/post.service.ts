@@ -3,7 +3,7 @@ import BaseService from '../base/base.service';
 import PostEntity, { PostStatus } from './post.entity';
 import { CreatePostDTO, PostResponseDTO, RejectPostDTO, UpdatePostDTO } from './post.dto';
 import { CategoryService } from '../category/category.service';
-import { and, condIf, fieldExists, gte, join, joinMany2One, match, or, set, unwind } from '../utils/mongo/aggregate-tools';
+import { and, condIf, fieldExists, gte, join, joinMany2One, lte, match, or, set, unwind } from '../utils/mongo/aggregate-tools';
 import { NoPermissionError } from '../commons/auth.exception';
 import { CityService } from '../city/city.service';
 import { DistrictService } from '../district/district.service';
@@ -31,6 +31,7 @@ export class PostService extends BaseService<PostEntity> {
       ...joinMany2One('User', 'createdBy', '_id', 'createdUser'),
       ...joinMany2One('District', 'districtID', '_id', 'district', 'name'),
       ...joinMany2One('City', 'cityID', '_id', 'city', 'name'),
+      join('Deal', '_id', 'postID', 'deals'),
       set({
         isHighlighted: condIf(
           and(
@@ -192,6 +193,12 @@ export class PostService extends BaseService<PostEntity> {
   getPublic(): Promise<PostResponseDTO[]> {
     return this.aggregate([
       match({ state: PostStatus.PUBLISHED }),
+      match(
+        or([
+          { 'auctionExpired': null },
+          lte('auctionExpired', Moment().valueOf())
+        ])
+      ),
       ...PostService.baseAggregate()
     ]);
   }
@@ -199,8 +206,14 @@ export class PostService extends BaseService<PostEntity> {
   getHighlight(): Promise<PostResponseDTO[]> {
     return this.aggregate([
       match({ state: PostStatus.PUBLISHED }),
-      ...PostService.baseAggregate(),
-      match({ isHighlighted: true })
+      match({ isHighlighted: true }),
+      match(
+        or([
+          { 'auctionExpired': null },
+          lte('auctionExpired', Moment().valueOf())
+        ])
+      ),
+      ...PostService.baseAggregate()
     ]);
   }
 }

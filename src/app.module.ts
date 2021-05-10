@@ -23,6 +23,7 @@ import { ReportModule } from './report/report.module';
 import { ChargeRequestModule } from './charge-request/charge-request.module';
 import { PointTransactionModule } from './point-transaction/point-transaction.module';
 import { NotificationModule } from './notification/notification.module';
+import { DealModule } from './deal/deal.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { NotificationModule } from './notification/notification.module';
     ChargeRequestModule,
     PointTransactionModule,
     NotificationModule,
+    DealModule,
   ],
   controllers: [AppController],
   providers: [AppService],

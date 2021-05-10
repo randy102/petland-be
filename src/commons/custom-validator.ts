@@ -41,7 +41,7 @@ export const IsNumber = (
   options?: IsNumberOptions,
   validationOptions?: ValidationOptions
 ): PropertyDecorator =>
-  _IsNumber(options, { ...validationOptions, message: 'Phải là Boolean' });
+  _IsNumber(options, { ...validationOptions, message: 'Phải là số' });
 
 export const IsEnum = (
   entity: object,
