@@ -12,7 +12,7 @@ export class EditCommentDTO{
     @Column()
     @Expose()
     id: string;
-
+z
     @ApiProperty()
     @Column()
     @Expose()

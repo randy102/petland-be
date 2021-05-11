@@ -40,7 +40,20 @@ export class PackService extends BaseService<PackEntity> {
 
   async updatePack(data: UpdatePackDTO, updatedBy: string): Promise<PackEntity> {
     const pack = await this.checkExistedId(data.id);
-    await this.checkDuplication({ name: data.name });
+    const packExistedName = await this.findOne({ name: data.name });
+    if(packExistedName){
+      if(pack._id == packExistedName._id){
+        return this.save({
+          ...pack,
+          name: data.name,
+          dayNumber: data.dayNumber,
+          price: data.price,
+          updatedBy
+        });
+      }else{
+        throw new HttpException('Gói nổi bật đã tồn tại', HttpStatus.BAD_REQUEST);
+      }
+    }
     return this.save({
       ...pack,
       name: data.name,
