@@ -33,7 +33,7 @@ export class PostService extends BaseService<PostEntity> {
       ...joinMany2One('City', 'cityID', '_id', 'city', 'name'),
       join('Deal', '_id', 'postID', 'deals'),
       set({
-        isHighlighted: condIf(
+        'isHighlighted': condIf(
           and(
             fieldExists('highlightExpired'),
             gte('$highlightExpired', Moment().valueOf())
@@ -194,10 +194,10 @@ export class PostService extends BaseService<PostEntity> {
     return this.aggregate([
       match({ state: PostStatus.PUBLISHED }),
       match(
-        or([
+        or(
           { 'auctionExpired': null },
           lte('auctionExpired', Moment().valueOf())
-        ])
+        )
       ),
       ...PostService.baseAggregate()
     ]);
@@ -206,14 +206,14 @@ export class PostService extends BaseService<PostEntity> {
   getHighlight(): Promise<PostResponseDTO[]> {
     return this.aggregate([
       match({ state: PostStatus.PUBLISHED }),
-      match({ isHighlighted: true }),
       match(
-        or([
+        or(
           { 'auctionExpired': null },
           lte('auctionExpired', Moment().valueOf())
-        ])
+        )
       ),
-      ...PostService.baseAggregate()
+      ...PostService.baseAggregate(),
+      match({ isHighlighted: true }),
     ]);
   }
 }

@@ -63,7 +63,7 @@ export function gte(left: any, right: any) {
 }
 
 export function lte(left: any, right: any) {
-  return { $lte: [left, right] };
+  return { [left]: {$lte: right} };
 }
 
 export function fieldExists(field: string) {
